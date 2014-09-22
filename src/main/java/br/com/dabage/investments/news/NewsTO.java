@@ -1,5 +1,6 @@
 package br.com.dabage.investments.news;
 
+import org.primefaces.model.SelectableDataModel;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -11,7 +12,7 @@ import br.com.dabage.investments.repositories.AbstractDocument;
 @CompoundIndexes({
     @CompoundIndex(name = "news_hd__idx", def = "{'newsHeader': 1, 'newsDate': 1}")
 })
-public class NewsTO extends AbstractDocument {
+public class NewsTO extends AbstractDocument implements SelectableDataModel<NewsTO>{
 
 	private String newsHeader;
 
@@ -79,5 +80,15 @@ public class NewsTO extends AbstractDocument {
 		return "NewsBean [newsHeader=" + newsHeader + ", newsDate=" + newsDate
 				+ ", stockType=" + stockType + ", ticker=" + ticker + ", news="
 				+ news + ", newsHref=" + newsHref + "]";
+	}
+
+	@Override
+	public NewsTO getRowData(String arg0) {
+		return this;
+	}
+
+	@Override
+	public Object getRowKey(NewsTO arg0) {
+		return newsHeader;
 	}
 }

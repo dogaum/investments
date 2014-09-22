@@ -1,0 +1,15 @@
+*.project
+*.classpath
+*.pageflow
+*.jsdtscope
+*.jsdtscope
+*.prefs
+*.prefs
+*.component
+.settings/org.eclipse.wst.common.project.facet.core.prefs.xml
+.settings/org.eclipse.wst.common.project.facet.core.xml
+.settings/org.eclipse.wst.common.project.facet.core.xml
+.settings/org.eclipse.wst.jsdt.ui.superType.container
+.settings/org.eclipse.wst.jsdt.ui.superType.container
+.settings/org.eclipse.wst.jsdt.ui.superType.name
+.settings/org.eclipse.wst.jsdt.ui.superType.name

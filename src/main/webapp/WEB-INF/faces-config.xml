@@ -21,6 +21,11 @@
 			<redirect />
 		</navigation-case>
 		<navigation-case>
+			<from-outcome>fr</from-outcome>
+			<to-view-id>/view/fatos_relevantes.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
 			<from-outcome>denied</from-outcome>
 			<to-view-id>/view/denied.xhtml</to-view-id>
 			<redirect />

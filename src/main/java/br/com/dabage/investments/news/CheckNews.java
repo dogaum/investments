@@ -56,11 +56,11 @@ public class CheckNews {
 					newsBean.setNews(news.text());
 					newsBean.setNewsHref(prefix + href);
 
-					if(insertNews(newsBean)) {
+					if(insertNews(newsBean) && newsBean.getNewsHeader().toLowerCase().contains("fii")) {
 						qtyNews++;
 						SendMailSSL.send(newsName, getQuotationsByPrefix(newsBean.getTicker()) + news.text());
 					}
-				}				
+				}
 			}
 
 		} catch (Exception e) {

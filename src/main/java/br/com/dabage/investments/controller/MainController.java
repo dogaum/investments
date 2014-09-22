@@ -49,7 +49,13 @@ public class MainController {
 		
 		return "home";
 	}
-	
+
+	@RequestMapping(value = "/fr", method = RequestMethod.GET)
+	public String fr(ModelMap map) {
+		
+		return "fr";
+	}
+
 	@RequestMapping(value = "/listUsers", method = RequestMethod.GET)
 	public String listUsers(ModelMap map) {
 		

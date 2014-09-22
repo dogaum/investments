@@ -1,0 +1,116 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+<!--<![endif]-->
+<f:view contentType="text/html">
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+
+		<title></title>
+		<script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<style type="text/css">
+			.ui-layout-north {
+				z-index: 20 !important;
+				overflow: visible !important;;
+			}
+			
+			.ui-layout-north .ui-layout-unit-content {
+				overflow: visible !important;
+			}
+			
+			body {
+				background-color: #FFFFFF;
+			}
+		</style>
+	</h:head>
+	<h:body>
+		<h:form id="form">
+			<!--[if lt IE 7]>
+	       		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	   		<![endif]-->
+			<p:layout fullPage="true">
+				<p:layoutUnit id="top" position="north" size="50">
+					<p:menubar>
+						<p:submenu label="Graficos" icon="ui-icon-image">
+							<p:menuitem value="Ferramenta grafica" url="/view/home.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Carteira" icon="ui-icon-contact">
+							<p:menuitem value="Carteiras" url="/view/carteiras.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Fatos Relevantes" icon="ui-icon-flag">
+							<p:menuitem value="Fatos Relevantes"
+								action="/view/fatos_relevantes.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Configuracoes" icon="ui-icon-gear">
+						</p:submenu>
+
+						<p:submenu label="Ajuda" icon="ui-icon-help">
+							<p:menuitem value="Conteudo" url="#" />
+						</p:submenu>
+
+						<f:facet name="options">
+							<p:inputText style="margin-right:10px" placeholder="Buscar..." />
+							<p:commandButton type="button" value="Sair"
+								icon="ui-icon-extlink" />
+						</f:facet>
+					</p:menubar>
+				</p:layoutUnit>
+
+				<p:layoutUnit id="left" position="west" size="200" resizable="false"
+					collapsible="true" header="Filtro">
+					<h:outputText value="Filtros" />
+				</p:layoutUnit>
+
+				<p:layoutUnit id="center" position="center">
+					<p:layout>
+						<p:layoutUnit position="north" size="50%" styleClass="nestedUnit" header="Fatos" collapsible="true">
+									<p:dataTable id="eventsDT" var="news" value="#{newsView.news}"
+										selectionMode="single" selection="#{newsView.selectedNews}"
+										rowKey="#{news.newsHeader}" rows="7" paginator="true"
+										paginatorPosition="top"
+										paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+										<p:ajax event="rowSelect" update=":form:frViewer" />
+										<p:ajax event="rowUnselect" update=":form:frViewer" />
+										<p:column headerText="Data" width="125" sortBy="#{news.newsDate}">
+											<h:outputText value="#{news.newsDate}" />
+										</p:column>
+										<p:column headerText="Codigo" width="90" sortBy="#{news.ticker}">
+											<h:outputText value="#{news.ticker}" />
+										</p:column>
+										<p:column headerText="Assunto">
+											<h:outputText value="#{news.newsHeader}" />
+										</p:column>
+									</p:dataTable>
+						</p:layoutUnit>
+
+						<p:layoutUnit position="center" styleClass="nestedUnit" header="Conteudo">
+							<p:outputPanel id="frViewer" deferred="true">
+								<p>
+									<h:outputText value="#{newsView.selectedNews.news}" rendered="#{newsView.selectedNews != null}" />
+								</p>
+							</p:outputPanel>
+						</p:layoutUnit>
+					</p:layout>
+				</p:layoutUnit>
+			</p:layout>
+		</h:form>
+	</h:body>
+</f:view>
+</html>

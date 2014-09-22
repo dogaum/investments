@@ -1,0 +1,256 @@
+<!DOCTYPE HTML>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+<!--<![endif]-->
+<f:view contentType="text/html">
+	<h:head>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<meta name="description" content="" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link rel="stylesheet" href="../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../css/bootstrap-theme.min.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+
+		<title></title>
+		<script src="../js/vendor/modernizr-2.6.2-respond-1.1.0.min.js"></script>
+		<style type="text/css">
+			.ui-layout-north {
+				z-index: 20 !important;
+				overflow: visible !important;;
+			}
+			
+			.ui-layout-north .ui-layout-unit-content {
+				overflow: visible !important;
+			}
+			
+			body {
+				background-color: #FFFFFF;
+			}
+		</style>
+	</h:head>
+	<h:body>
+		<h:form id="form">
+			<!--[if lt IE 7]>
+	       		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+	   		<![endif]-->
+			<p:growl id="msgs" showDetail="true"/>
+
+			<p:layout fullPage="true">
+				<p:layoutUnit id="top" position="north" size="50">
+					<p:menubar>
+						<p:submenu label="Graficos" icon="ui-icon-image">
+							<p:menuitem value="Ferramenta grafica" url="/view/home.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Carteira" icon="ui-icon-contact">
+							<p:menuitem value="Carteiras" url="/view/carteiras.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Fatos Relevantes" icon="ui-icon-flag">
+							<p:menuitem value="Fatos Relevantes"
+								action="/view/fatos_relevantes.jsf" />
+						</p:submenu>
+
+						<p:submenu label="Configuracoes" icon="ui-icon-gear">
+						</p:submenu>
+
+						<p:submenu label="Ajuda" icon="ui-icon-help">
+							<p:menuitem value="Conteudo" url="#" />
+						</p:submenu>
+
+						<f:facet name="options">
+							<p:inputText style="margin-right:10px" placeholder="Buscar..." />
+							<p:commandButton type="button" value="Sair"
+								icon="ui-icon-extlink" />
+						</f:facet>
+					</p:menubar>
+				</p:layoutUnit>
+
+				<p:layoutUnit id="center" position="center">
+					<p:layout>
+						<p:layoutUnit position="north" styleClass="nestedUnit" header="Carteiras" collapsible="false">
+					        <p:ring id="carteiras" value="#{carteiraView.carteiras}" var="carteira" styleClass="image-ring" easing="easeInOutBack">
+						        <p:outputPanel style="text-align: center;" layout="block">
+						            #{carteira.name}
+						            <br />
+							        <p:commandLink title="Detalhar Carteira" action="#{carteiraView.selectCarteira}" update=":form:carteiraDetail"
+							        			   styleClass="ui-icon ui-icon-search" style="float:left;margin-right:10px">
+							            <f:setPropertyActionListener value="#{carteira}" target="#{carteiraView.selectedCarteira}" />
+							        </p:commandLink>
+						        </p:outputPanel>
+						    </p:ring>
+						    <p:commandLink id="clNovaCarteira" onclick="PF('addCarteiraDlg').show()">
+						        <h:outputText value="Adicionar Carteira" />
+						    </p:commandLink>
+						</p:layoutUnit>
+
+						<p:layoutUnit position="center" styleClass="nestedUnit" header="Detalhes" size="100%">
+						    <p:outputPanel id="carteiraDetail" deferred="true" rendered="#{not empty carteiraView.selectedCarteira}">
+						        <p>
+						        	<b>Carteira <h:outputText value="#{carteiraView.selectedCarteira.name}"/></b><br/>
+						        	Criada em <h:outputText value="#{carteiraView.selectedCarteira.createDate}"><f:convertDateTime locale="pt_BR"  /></h:outputText>
+						        	por <h:outputText value="#{carteiraView.selectedCarteira.user.name} "/><h:outputText value="#{carteiraView.selectedCarteira.user.surname}"/>
+						        </p>
+
+							    <p:commandLink id="clNovaNegociacao" onclick="PF('addNegociacaoDlg').show()" actionListener="#{carteiraView.prepareNegotiation}"
+							    				update=":form:panelNewNegotiation">
+							        <h:outputText value="Adicionar Compra/Venda" />
+							    </p:commandLink>
+
+								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}">
+									<p:column style="width:38px">
+							            <p:rowToggler />
+							        </p:column>
+
+								    <p:column headerText="Codigo">
+								        <h:outputText value="#{item.stock}" />
+								    </p:column>
+
+								    <p:column headerText="Quantidade">
+								        <h:outputText value="#{item.quantity}" />
+								    </p:column>
+								 
+								    <p:column headerText="Preco Medio">
+								        <h:outputText value="#{item.avgValue}">
+								        	<f:convertNumber type="currency" currencySymbol="R$" maxFractionDigits="2" locale="pt_BR"/>
+								        </h:outputText>
+								    </p:column>
+								 
+								    <p:column headerText="Total">
+								        <h:outputText value="#{item.totalValue}">
+								        	<f:convertNumber type="currency" currencySymbol="R$" maxFractionDigits="2" locale="pt_BR"/>
+								        </h:outputText>
+								    </p:column>
+
+							        <p:rowExpansion>
+										<p:dataTable widgetVar="negItemTable" var="negItem" value="#{item.negotiations}" style="margin-left:27px" rowKey="#{negItem.id}"
+													selection="#{carteiraView.negotiation}" selectionMode="single" editable="true">
+
+											<p:ajax event="rowEdit" listener="#{carteiraView.editNegotiation}" update=":form:carteiraDetail" />
+ 
+ 										    <p:column headerText="Data" sortBy="#{negItem.dtNegociation}">
+										        <h:outputText value="#{negItem.dtNegociation}">
+										        	<f:convertDateTime locale="pt_BR"  />
+										        </h:outputText>
+										    </p:column>
+
+										    <p:column headerText="Código" sortBy="#{negItem.stock}">
+										        <h:outputText value="#{negItem.stock}" />
+										    </p:column>
+
+										    <p:column headerText="Tipo" sortBy="#{negItem.negociationType}">
+									           <p:cellEditor>
+									               <f:facet name="output"><h:outputText value="#{negItem.negociationType}" /></f:facet>
+									               <f:facet name="input">
+												       <p:selectOneMenu id="negType" value="#{negItem.negociationType}" style="width:100%">
+								            		   		<f:selectItems value="#{carteiraView.negotiationTypes}" />
+												       </p:selectOneMenu>
+									               </f:facet>
+									            </p:cellEditor>
+										    </p:column>
+										 
+										    <p:column headerText="Quantidade" sortBy="#{negItem.quantity}">
+									           <p:cellEditor>
+									               <f:facet name="output"><h:outputText value="#{negItem.quantity}" /></f:facet>
+									               <f:facet name="input"><p:spinner value="#{negItem.quantity}" min="0" /></f:facet>
+									            </p:cellEditor>
+										    </p:column>
+
+										    <p:column headerText="Valor" sortBy="#{negItem.value}">
+									           <p:cellEditor>
+									               <f:facet name="output">
+												        <h:outputText value="#{negItem.value}">
+												        	<f:convertNumber type="currency" currencySymbol="R$" maxFractionDigits="2" locale="pt_BR"/>
+												        </h:outputText>
+									               </f:facet>
+									               <f:facet name="input"><pe:inputNumber value="#{negItem.value}"  symbol="R$ "/></f:facet>
+									            </p:cellEditor>
+										    </p:column>
+
+										    <p:column headerText="Custos" sortBy="#{negItem.costs}">
+									           <p:cellEditor>
+									               <f:facet name="output">
+												        <h:outputText value="#{negItem.costs}">
+												        	<f:convertNumber type="currency" currencySymbol="R$" maxFractionDigits="2" locale="pt_BR"/>
+												        </h:outputText>
+									               </f:facet>
+									               <f:facet name="input"><pe:inputNumber value="#{negItem.costs}"  symbol="R$ "/></f:facet>
+									            </p:cellEditor>
+										    </p:column>
+
+										    <p:column style="width:38px">
+										        <p:rowEditor />
+										    </p:column>
+										</p:dataTable>
+        							</p:rowExpansion>
+								</p:dataTable>
+						    </p:outputPanel>
+						</p:layoutUnit>
+					</p:layout>
+				</p:layoutUnit>
+			</p:layout>
+
+	        <p:dialog widgetVar="addCarteiraDlg" modal="true" header="Nova Carteira" width="530" showEffect="fade" hideEffect="fade">
+				<p:panel id="panelNewCarteira">
+	                <h:panelGrid columns="2" cellspacing="5">
+	                    <h:outputLabel for="newName" value="Nome: " />
+	                    <h:inputText id="newName" value="#{carteiraView.newName}" label="newName"/>
+	                </h:panelGrid>
+	
+	                <p:separator />
+	                <p:commandButton value="Criar" onclick="PF('addCarteiraDlg').hide()" actionListener="#{carteiraView.create}" update=":form:carteiras"/>
+	                <p:commandButton value="Cancelar" onclick="PF('addCarteiraDlg').hide()" type="button"/>
+				</p:panel>
+	        </p:dialog>
+
+	        <p:dialog widgetVar="addNegociacaoDlg" modal="true" header="Compra/Venda de Ativo" width="530" showEffect="fade" hideEffect="fade">
+				<p:panel id="panelNewNegotiation">
+	                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty carteiraView.negotiation}">
+	                    <p:outputLabel for="negType" value="Tipo: " />
+				        <p:selectOneMenu id="negType" value="#{carteiraView.negotiation.negociationType}" >
+            				<f:selectItems value="#{carteiraView.negotiationTypes}" />
+				        </p:selectOneMenu>
+
+				        <p:outputLabel value="Codigo:" for="negCodigo" />
+				        <p:autoComplete id="negCodigo" minQueryLength="3" value="#{carteiraView.negotiation.stock}"
+				        			 completeMethod="#{chartView.completeStock}" effect="fade" />
+
+ 						<p:outputLabel for="negDate" value="Data:" />
+        				<p:calendar id="negDate" value="#{carteiraView.negotiation.dtNegociation}" pattern="dd/MM/yyyy" mask="true" />
+
+						<p:outputLabel value="Quantidade:" for="negQuantidade" />
+						<p:spinner id="negQuantidade" value="#{carteiraView.negotiation.quantity}" min="0" />
+
+						<p:outputLabel value="Valor unitario:" for="negValorUnit" />
+						<pe:inputNumber id="negValorUnit" value="#{carteiraView.negotiation.value}"  symbol="R$ " />
+
+						<p:outputLabel value="Custos:" for="negCustos" />
+						<pe:inputNumber id="negCustos" value="#{carteiraView.negotiation.costs}"  symbol="R$ " />
+	                </h:panelGrid>
+	
+	                <p:separator />
+	                <p:toolbar>
+	                	<f:facet name="left">
+	                		<p:commandButton value="Cancelar" onclick="PF('addNegociacaoDlg').hide()" type="button"/>
+	                	</f:facet>
+	                	<f:facet name="right">
+	                		<p:commandButton value="Adicionar" onclick="PF('addNegociacaoDlg').hide()" actionListener="#{carteiraView.addNegotiation}" update=":form:carteiraDetail"/>
+	                	</f:facet>
+	                </p:toolbar>
+				</p:panel>
+	        </p:dialog>
+
+		</h:form>
+	</h:body>
+</f:view>
+</html>

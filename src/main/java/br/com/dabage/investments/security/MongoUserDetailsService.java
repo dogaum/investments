@@ -43,7 +43,7 @@ public class MongoUserDetailsService implements UserDetailsService {
      			   accountNonExpired,
      			   credentialsNonExpired,
      			   accountNonLocked,
-     			   getAuthorities(user.getRoles()));        	
+     			   getAuthorities(user.getRoles()));
         }
 
         return userdetails;
