@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
@@ -30,7 +27,7 @@ import br.com.dabage.investments.user.UserTO;
 
 @Controller(value="carteiraView")
 @RequestScoped
-public class CarteiraView implements Serializable {
+public class CarteiraView extends BasicView implements Serializable {
 
 	/** */
 	private static final long serialVersionUID = 6601802404818265880L;
@@ -48,19 +45,18 @@ public class CarteiraView implements Serializable {
 	private int firstCarteiraRing;
 
     @Resource
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Resource
-    private CarteiraRepository carteiraRepository;
+    CarteiraRepository carteiraRepository;
 
     @Resource
-    private NegotiationRepository negotiationRepository;
+    NegotiationRepository negotiationRepository;
 
 	@Resource
 	CompanyRepository companyRepository;
 
-	@PostConstruct
-	public void init() {
+	public String init() {
 		UserTO user = userRepository.findByEmail("dogaum@gmail.com");
 		carteiras = carteiraRepository.findByUser(user);
 		if (carteiras != null) {
@@ -73,6 +69,7 @@ public class CarteiraView implements Serializable {
 			SelectItem item = new SelectItem(NegotiationType.values()[i], NegotiationType.values()[i].name());
 			negotiationTypes.add(item);
 		}
+		return "carteiras";
 	}
 
 	/**
@@ -92,7 +89,7 @@ public class CarteiraView implements Serializable {
 	 */
 	public void selectCarteira() {
 		if (selectedCarteira == null) {
-			addMessage("Selecione uma carteira.");
+			addWarnMessage("Selecione uma carteira.");
 		} else {
 
 			// Seta qual o Ring vai ficar selecionado no refresh da tela.
@@ -131,7 +128,7 @@ public class CarteiraView implements Serializable {
 	}
 
 	public void addNegotiation(ActionEvent event) {
-		if (!validaNogotiation(negotiation)) return; 
+		if (!checkNegotiation(negotiation)) return; 
 
 		negotiation.setCarteira(selectedCarteira);
 		negotiationRepository.save(negotiation);
@@ -142,37 +139,42 @@ public class CarteiraView implements Serializable {
 	public void editNegotiation(RowEditEvent event) {
 
 		NegotiationTO neg = (NegotiationTO) event.getObject();
-		if (!validaNogotiation(neg)) return;
+		if (!checkNegotiation(neg)) return;
 
 		neg.setCarteira(selectedCarteira);
 		negotiationRepository.save(neg);
 		this.selectCarteira();
 	}
 
-	private boolean validaNogotiation(NegotiationTO neg) {
+	/**
+	 * Validates a Negotiation insert/update
+	 * @param neg
+	 * @return
+	 */
+	private boolean checkNegotiation(NegotiationTO neg) {
 		if (neg == null) {
-			addMessage("Valores invalidos.");
+			addWarnMessage("Valores invalidos.");
 			return false;
 		}
 
 		if (neg.getDtNegociation() == null) {
-			addMessage("Informe uma data.");
+			addWarnMessage("Informe uma data.");
 			return false;
 		}
 		
 		if (neg.getQuantity() == 0) {
-			addMessage("Quantidade deve ser maior de 0 (zero)");
+			addWarnMessage("Quantidade deve ser maior de 0 (zero)");
 			return false;
 		}
 		neg.setStock(neg.getStock().toUpperCase());
 
 		if (neg.getStock().length() < 5) {
-			addMessage("Código inválido: " + neg.getStock());
+			addWarnMessage("Código inválido: " + neg.getStock());
 			return false;
 		} else {
 			CompanyTO company = companyRepository.findByTicker(neg.getStock());
 			if (company == null) {
-				addMessage("Código inválido: " + neg.getStock());
+				addWarnMessage("Código inválido: " + neg.getStock());
 				return false;
 			}
 		}
@@ -241,10 +243,5 @@ public class CarteiraView implements Serializable {
 	public void setFirstCarteiraRing(int firstCarteiraRing) {
 		this.firstCarteiraRing = firstCarteiraRing;
 	}
-
-	public void addMessage(String summary) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary,  null);
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
 
 }

@@ -8,9 +8,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.DateAxis;
@@ -25,7 +23,7 @@ import br.com.dabage.investments.repositories.CompanyRepository;
 
 @Controller(value="chartView")
 @RequestScoped
-public class ChartView implements Serializable {
+public class ChartView extends BasicView implements Serializable {
 
     /** */
 	private static final long serialVersionUID = -5161552188823251622L;
@@ -64,7 +62,7 @@ public class ChartView implements Serializable {
 
 		List<Quote> quotes = getQuotation.getQuoteHist(stock);
 		if (quotes == null || quotes.isEmpty()) {
-			addMessage("Codigo nao encontrado: " + stock.toUpperCase());
+			addInfoMessage("Codigo não encontrado: " + stock.toUpperCase());
 		}
 
 		for (Quote quote : quotes) {
@@ -95,11 +93,6 @@ public class ChartView implements Serializable {
         }
 
         return results;
-    }
-
-    public void addMessage(String summary) {
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, summary,  null);
-        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
 }

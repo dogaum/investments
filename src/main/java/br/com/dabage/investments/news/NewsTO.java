@@ -4,6 +4,7 @@ import org.primefaces.model.SelectableDataModel;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.index.CompoundIndexes;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import br.com.dabage.investments.repositories.AbstractDocument;
@@ -14,7 +15,7 @@ import br.com.dabage.investments.repositories.AbstractDocument;
 })
 public class NewsTO extends AbstractDocument implements SelectableDataModel<NewsTO>{
 
-	private String newsHeader;
+	@TextIndexed private String newsHeader;
 
 	private String newsDate;
 

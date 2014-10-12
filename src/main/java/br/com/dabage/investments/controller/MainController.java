@@ -44,10 +44,10 @@ public class MainController {
 		return "menu";
 	}
 
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
-	public String home(ModelMap map) {
+	@RequestMapping(value = "/graph", method = RequestMethod.GET)
+	public String graph(ModelMap map) {
 		
-		return "home";
+		return "graph";
 	}
 
 	@RequestMapping(value = "/fr", method = RequestMethod.GET)

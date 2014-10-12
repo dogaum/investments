@@ -14,7 +14,8 @@ public interface NewsRepository extends MongoRepository<NewsTO, BigInteger> {
 	@SuppressWarnings("unchecked")
 	NewsTO save (NewsTO newsTO);
 
-	List<NewsTO> findByTicker(String ticker);
+	List<NewsTO> findByTickerIgnoreCase(String ticker);
 
 	NewsTO findByNewsHeaderAndNewsDate(String newsHeader, String newsDate);
+
 }

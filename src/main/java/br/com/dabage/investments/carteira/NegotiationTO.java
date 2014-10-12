@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import br.com.dabage.investments.config.StockTypeTO;
 import br.com.dabage.investments.repositories.AbstractDocument;
 
 @Document(collection="negotiations")
@@ -30,6 +31,9 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 
 	@DBRef
 	private CarteiraTO carteira;
+
+	@DBRef
+	private StockTypeTO stockType;
 
 	public String getStock() {
 		return stock;
@@ -101,6 +105,14 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 
 	public void setRemoveDate(Date removeDate) {
 		this.removeDate = removeDate;
+	}
+
+	public StockTypeTO getStockType() {
+		return stockType;
+	}
+
+	public void setStockType(StockTypeTO stockType) {
+		this.stockType = stockType;
 	}
 
 	@Override

@@ -16,8 +16,13 @@
 			<redirect />
 		</navigation-case>
 		<navigation-case>
-			<from-outcome>home</from-outcome>
-			<to-view-id>/view/home.xhtml</to-view-id>
+			<from-outcome>graph</from-outcome>
+			<to-view-id>/view/graph.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>carteiras</from-outcome>
+			<to-view-id>/view/carteiras.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 		<navigation-case>
@@ -28,6 +33,11 @@
 		<navigation-case>
 			<from-outcome>denied</from-outcome>
 			<to-view-id>/view/denied.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>config</from-outcome>
+			<to-view-id>/view/config.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
 	</navigation-rule>

@@ -30,7 +30,7 @@
 	<!-- PrimeFaces Theme -->
 	<context-param>
 		<param-name>primefaces.THEME</param-name>
-		<param-value>bootstrap</param-value>
+		<param-value>redmond</param-value>
 	</context-param>
 
 	<!-- Welcome page -->
