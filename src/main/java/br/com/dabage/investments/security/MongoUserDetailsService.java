@@ -37,7 +37,7 @@ public class MongoUserDetailsService implements UserDetailsService {
         boolean accountNonLocked = true;
         UserTO user = userRepository.findByEmail(username);
         if (user != null) {
-            userdetails = new User(user.getName() + " " + user.getSurname(), 
+            userdetails = new User(user.getUsername(), 
 					   user.getPassword(),
      			   enabled,
      			   accountNonExpired,

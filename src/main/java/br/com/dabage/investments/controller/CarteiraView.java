@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
@@ -22,7 +23,6 @@ import br.com.dabage.investments.company.CompanyTO;
 import br.com.dabage.investments.repositories.CarteiraRepository;
 import br.com.dabage.investments.repositories.CompanyRepository;
 import br.com.dabage.investments.repositories.NegotiationRepository;
-import br.com.dabage.investments.repositories.UserRepository;
 import br.com.dabage.investments.user.UserTO;
 
 @Controller(value="carteiraView")
@@ -45,9 +45,6 @@ public class CarteiraView extends BasicView implements Serializable {
 	private int firstCarteiraRing;
 
     @Resource
-    UserRepository userRepository;
-
-    @Resource
     CarteiraRepository carteiraRepository;
 
     @Resource
@@ -56,19 +53,24 @@ public class CarteiraView extends BasicView implements Serializable {
 	@Resource
 	CompanyRepository companyRepository;
 
+	@PostConstruct
+	public void prepare() {
+		negotiationTypes = new ArrayList<SelectItem>();
+		for (int i = 0; i < NegotiationType.values().length; i++) {
+			SelectItem item = new SelectItem(NegotiationType.values()[i], NegotiationType.values()[i].name());
+			negotiationTypes.add(item);
+		}
+	}
+	
 	public String init() {
-		UserTO user = userRepository.findByEmail("dogaum@gmail.com");
+		UserTO user = getUserLoggedIn();
 		carteiras = carteiraRepository.findByUser(user);
 		if (carteiras != null) {
 			firstCarteiraRing = 0;
 			selectedCarteira = carteiras.get(firstCarteiraRing);
 			selectCarteira();
 		}
-		negotiationTypes = new ArrayList<SelectItem>();
-		for (int i = 0; i < NegotiationType.values().length; i++) {
-			SelectItem item = new SelectItem(NegotiationType.values()[i], NegotiationType.values()[i].name());
-			negotiationTypes.add(item);
-		}
+
 		return "carteiras";
 	}
 
@@ -77,7 +79,7 @@ public class CarteiraView extends BasicView implements Serializable {
 	 */
 	public void create(ActionEvent event) {
 		CarteiraTO carteira = new CarteiraTO(newName);
-		carteira.setUser(userRepository.findByEmail("dogaum@gmail.com"));
+		carteira.setUser(getUserLoggedIn());
 
 		carteiras.add(carteira);
 		carteiraRepository.save(carteira);

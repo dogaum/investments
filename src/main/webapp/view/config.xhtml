@@ -16,7 +16,7 @@
     	<style type="text/css">
 	    	.panel-heading a:after {
 	    	    font-family: 'Glyphicons Halflings';
-	    	    content: "\e114";    
+	    	    content: "\e114";
 	    	    float: right; 
 	    	    color: #fff;
 	    	}
@@ -56,9 +56,9 @@
 				        </a>
 				      </h4>
 				    </div>
-				    <div id="collapseFilter" class="panel-collapse collapse in">
+				    <div id="collapseFilter" class="panel-collapse collapse out">
 				      <div class="panel-body">
-				      	<p:outputPanel id="stockTypeContent" deferred="true" rendered="#{not empty carteiraView.selectedCarteira}">
+				      	<p:outputPanel id="stockTypeContent" deferred="true">
 						    <p:commandLink id="clNewStockType" onclick="PF('addStockTypeDlg').show()" actionListener="#{configView.prepareStockType}"
 						    				update=":form:panelNewStockType">
 						        <h:outputText value="#{msg['app.config.stockType.add']}" />
@@ -67,7 +67,7 @@
 							<p:dataTable widgetVar="stockTypeItemTable" var="stockTypeItem" value="#{configView.stockTypes}"
 										 editable="true">
 	
-								<p:ajax event="rowEdit" process="@form" listener="#{configView.editStockType}" update=":form:stockTypeContent" />
+								<p:ajax event="rowEdit" listener="#{configView.editStockType}" update=":form:stockTypeContent" />
 
 							    <p:column headerText="#{msg['app.config.stockType.lbl.name']}">
 						           <p:cellEditor>
@@ -129,7 +129,68 @@
 				    </div>
 				  </div>
 				</div>
+                <div class="col-lg-12">
+				  <div class="panel panel-primary">
+				    <div class="panel-heading">
+				      <h4 class="panel-title">
+				        <a data-toggle="collapse" href="#collapseUser" class="panel-title">
+				          <h:outputText value="#{msg['app.config.user.title']}"/>
+				        </a>
+				      </h4>
+				    </div>
+				    <div id="collapseUser" class="panel-collapse collapse out">
+				      <div class="panel-body">
+				      	<p:outputPanel id="userContent" deferred="true">
+						    <p:commandLink id="clNewUser" onclick="PF('addUserDlg').show()" actionListener="#{configView.prepareUser}"
+						    				update=":form:panelNewUser">
+						        <h:outputText value="#{msg['app.config.user.add']}" />
+						    </p:commandLink>
+
+							<p:dataTable widgetVar="userTable" var="user" value="#{configView.users}">
+	
+							    <p:column headerText="#{msg['app.config.user.lbl.name']}">
+						           <h:outputText value="#{user.name}" />
+							    </p:column>
+	
+							    <p:column headerText="#{msg['app.config.user.lbl.surname']}">
+						           <h:outputText value="#{user.surname}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.config.user.lbl.username']}">
+						           <h:outputText value="#{user.username}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.config.user.lbl.email']}">
+						           <h:outputText value="#{user.email}" />
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.config.user.lbl.addDate']}">
+						           <h:outputText value="#{user.addDate}" />
+							    </p:column>
+
+								<p:column headerText="#{msg['app.config.user.lbl.roles']}">
+									<ui:repeat var="rol" value="#{user.roles}">
+										#{rol.name}
+									</ui:repeat>
+								</p:column>
+
+							    <p:column style="width:38px">
+
+							    </p:column>
+							    <p:column style="width:48px">
+							        <p:commandButton icon="ui-icon-close" action="#{configView.deleteUser}" update=":form:userContent" id="cbDeleteUser">
+							        	<p:confirm header="#{msg['app.config.user.delete.dlg.confirm']}" message="#{msg['app.config.user.delete.dlg.msg']}" icon="ui-icon-alert" />
+							        	<f:setPropertyActionListener value="#{user}" target="#{configView.user}" for="cbDeleteUser"/>
+							        </p:commandButton>
+							    </p:column>
+							</p:dataTable>
+				      	</p:outputPanel>
+				      </div>
+				    </div>
+				  </div>
+                </div>
             </div>
+
 		    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
                 <p:toolbar>
                 	<f:facet name="left">
@@ -140,6 +201,7 @@
                 	</f:facet>
                 </p:toolbar>
 		    </p:confirmDialog>
+
 	        <p:dialog widgetVar="addStockTypeDlg" modal="true" position="center" header="#{msg['app.config.stockType.add.dlg.header']}" width="530" showEffect="fade" hideEffect="fade" closeOnEscape="true">
 				<p:panel id="panelNewStockType">
 	                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty configView.stockType}">
@@ -164,6 +226,43 @@
 	                	</f:facet>
 	                	<f:facet name="right">
 	                		<p:commandButton value="#{msg['btn.add']}" onclick="PF('addStockTypeDlg').hide()" actionListener="#{configView.addStockType}" update=":form:stockTypeContent"/>
+	                	</f:facet>
+	                </p:toolbar>
+				</p:panel>
+	        </p:dialog>
+
+	        <p:dialog widgetVar="addUserDlg" modal="true" position="center" header="#{msg['app.config.user.add.dlg.header']}" width="600" showEffect="fade" hideEffect="fade" closeOnEscape="true">
+				<p:panel id="panelNewUser">
+	                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty configView.user}">
+
+				        <p:outputLabel value="#{msg['app.config.user.lbl.name']}:" for="usName" />
+				        <p:inputText id="usName" type="text" value="#{configView.user.name}" styleClass="initialism" size="67"/>
+
+				        <p:outputLabel value="#{msg['app.config.user.lbl.surname']}:" for="usSurname" />
+				        <p:inputText id="usSurname" type="text" value="#{configView.user.surname}" styleClass="initialism" size="67"/>
+
+				        <p:outputLabel value="#{msg['app.config.user.lbl.username']}:" for="usUsername" />
+				        <p:inputText id="usUsername" type="text" value="#{configView.user.username}" styleClass="initialism"/>
+
+				        <p:outputLabel value="#{msg['app.config.user.lbl.email']}:" for="usEmail" />
+				        <p:inputText id="usEmail" type="text" value="#{configView.user.email}" size="67"/>
+
+						<p:outputLabel value="#{msg['app.config.user.lbl.password']}:" for="usPassword" />
+						<p:password id="usPassword" value="#{configView.user.password}" feedback="true"
+				                    promptLabel="#{msg['app.config.user.lbl.password.promptLabel']}" weakLabel="#{msg['app.config.user.lbl.password.weakLabel']}"
+				                    goodLabel="#{msg['app.config.user.lbl.password.goodLabel']}" strongLabel="#{msg['app.config.user.lbl.password.strongLabel']}" />
+
+						<p:outputLabel value="#{msg['app.config.user.lbl.roles']}:" for="usRoles" />
+						<p:pickList id="usRoles" value="#{configView.roles}" var="role" itemLabel="#{role.description}" itemValue="#{role}" />
+	                </h:panelGrid>
+	
+	                <p:separator />
+	                <p:toolbar>
+	                	<f:facet name="left">
+	                		<p:commandButton value="#{msg['btn.cancel']}" onclick="PF('addUserDlg').hide()" type="button"/>
+	                	</f:facet>
+	                	<f:facet name="right">
+	                		<p:commandButton value="#{msg['btn.add']}" onclick="PF('addUserDlg').hide()" actionListener="#{configView.addUser}" update=":form:userContent"/>
 	                	</f:facet>
 	                </p:toolbar>
 				</p:panel>

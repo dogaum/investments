@@ -54,7 +54,7 @@ public class NewsView extends BasicView implements Serializable {
 	private String filterSubject;
 
 	@PostConstruct
-	public void init() {
+	public void prepare() {
 		news = newsRepository.findAll(new Sort(Sort.Direction.DESC, "newsDate"));
 		clearFilter(null);
 	}

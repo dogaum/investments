@@ -1,5 +1,6 @@
 package br.com.dabage.investments.user;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -23,6 +24,18 @@ public class UserTO extends AbstractDocument {
 
 	@DBRef
 	private List<RoleTO> roles;
+
+	/** Creation date */
+	private Date addDate;
+
+	/** Deleted date */
+	private Date removeDate;
+
+	/** IF it was actvated .*/
+	private Boolean activated;
+
+	/** Date of activation */
+	private Date activateDate;
 
 	public UserTO() {
 		super();		
@@ -94,6 +107,38 @@ public class UserTO extends AbstractDocument {
 
 	public void setRoles(List<RoleTO> roles) {
 		this.roles = roles;
+	}
+
+	public Date getAddDate() {
+		return addDate;
+	}
+
+	public void setAddDate(Date addDate) {
+		this.addDate = addDate;
+	}
+
+	public Date getRemoveDate() {
+		return removeDate;
+	}
+
+	public void setRemoveDate(Date removeDate) {
+		this.removeDate = removeDate;
+	}
+
+	public Boolean getActivated() {
+		return activated;
+	}
+
+	public void setActivated(Boolean activated) {
+		this.activated = activated;
+	}
+
+	public Date getActivateDate() {
+		return activateDate;
+	}
+
+	public void setActivateDate(Date activateDate) {
+		this.activateDate = activateDate;
 	}
 
 	@Override
