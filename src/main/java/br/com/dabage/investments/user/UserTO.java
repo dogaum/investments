@@ -3,6 +3,7 @@ package br.com.dabage.investments.user;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,9 +17,14 @@ public class UserTO extends AbstractDocument {
 	private String name;
 	private String surname;
 	private String age;
+	
 	@Indexed
 	private String username;
 	private String password;
+
+	@Transient
+	private String retypePassword;
+
 	@Indexed
 	private String email;
 
@@ -91,6 +97,14 @@ public class UserTO extends AbstractDocument {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public String getRetypePassword() {
+		return retypePassword;
+	}
+
+	public void setRetypePassword(String retypePassword) {
+		this.retypePassword = retypePassword;
 	}
 
 	public String getEmail() {

@@ -12,7 +12,6 @@
     	<h:outputText value="#{msg['app.portfolio.title']}"/>
     </ui:define>
 	<ui:define name="body">
-		<h:form id="form">
             <!-- Page Heading -->
             <div class="row" id="divSubtitle">
                 <div class="col-lg-12">
@@ -180,21 +179,28 @@
 										    </p:column>
 										    <p:column style="width:48px">
 										        <p:commandButton icon="ui-icon-close" action="#{carteiraView.deleteNegotiation}" update=":form:portfolioDetail" id="cbDeleteNegotiation">
-										        	<p:confirm header="#{msg['app.portfolio.delete.dlg.confirm']}" message="#{msg['app.portfolio.delete.dlg.msg']}" icon="ui-icon-alert" />
+										        	<p:confirm header="#{msg['app.label.confirm']}" message="#{msg['app.portfolio.delete.dlg.msg']}" icon="ui-icon-alert" />
 										        	<f:setPropertyActionListener value="#{negItem}" target="#{carteiraView.negotiation}" for="cbDeleteNegotiation"/>
 										        </p:commandButton>
 										    </p:column>
 										</p:dataTable>
         							</p:rowExpansion>
+									<p:columnGroup type="footer">
+							            <p:row>
+							                <p:column colspan="4" style="text-align:right" footerText="Total da carteira:" />
+							                <p:column>
+									            <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.totalPortfolio}">
+											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+											        </h:outputText>
+									            </f:facet>
+							                </p:column>
+							            </p:row>
+							        </p:columnGroup>
 								</p:dataTable>
                             </div>
                         </div>
 				    </p:outputPanel>
-
-				    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-				        <p:commandButton value="#{msg['app.label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-				        <p:commandButton value="#{msg['app.label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-				    </p:confirmDialog>
 
 			        <p:dialog widgetVar="addPortfolioDlg" modal="true" position="center" header="#{msg['app.portfolio.newPortfolio']}" width="530" showEffect="fade" hideEffect="fade" closeOnEscape="true">
 						<p:panel id="panelNewCarteira">
@@ -246,13 +252,12 @@
 			                		<p:commandButton value="#{msg['btn.cancel']}" onclick="PF('addNegotiationDlg').hide()" type="button"/>
 			                	</f:facet>
 			                	<f:facet name="right">
-			                		<p:commandButton value="#{msg['btn.add']}" onclick="PF('addNegotiationDlg').hide()" actionListener="#{carteiraView.addNegotiation}" update=":form:portfolioDetail"/>
+			                		<p:commandButton value="#{msg['btn.add']}" actionListener="#{carteiraView.addNegotiation}" update=":form:portfolioDetail"/>
 			                	</f:facet>
 			                </p:toolbar>
 						</p:panel>
 			        </p:dialog>
                 </div>
             </div>
-		</h:form>
     </ui:define>
 </ui:composition>

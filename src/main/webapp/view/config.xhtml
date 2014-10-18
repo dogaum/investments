@@ -23,18 +23,11 @@
 	    	.panel-heading a.collapsed:after {
 	    	    content: "\e080";
 	    	}
-	    	.ui-toolbar.ui-widget-header {
-			  background-image: none;
-			  color: #fff;
-			  background-color: #428bca;
-	    	}
-
 			.panel-green .panel-heading a {
 			    font-weight: bold;
 			    color: #fff;
 			}
     	</style>
-    	<h:form id="form">
             <!-- Page Heading -->
             <div class="row">
                 <div class="col-lg-12">
@@ -119,7 +112,7 @@
 							    </p:column>
 							    <p:column style="width:48px">
 							        <p:commandButton icon="ui-icon-close" action="#{configView.deleteStockType}" update=":form:stockTypeContent" id="cbDeleteStockType">
-							        	<p:confirm header="#{msg['app.config.stockType.delete.dlg.confirm']}" message="#{msg['app.config.stockType.delete.dlg.msg']}" icon="ui-icon-alert" />
+							        	<p:confirm header="#{msg['app.label.confirm']}" message="#{msg['app.config.stockType.delete.dlg.msg']}" icon="ui-icon-alert" />
 							        	<f:setPropertyActionListener value="#{stockTypeItem}" target="#{configView.stockType}" for="cbDeleteStockType"/>
 							        </p:commandButton>
 							    </p:column>
@@ -165,7 +158,15 @@
 							    </p:column>
 
 							    <p:column headerText="#{msg['app.config.user.lbl.addDate']}">
-						           <h:outputText value="#{user.addDate}" />
+						           <h:outputText value="#{user.addDate}">
+						           		<f:convertDateTime locale="#{msg['locale']}" pattern="#{msg['dateHourPattern']}" />
+						           </h:outputText>
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.config.user.lbl.removeDate']}">
+						           <h:outputText value="#{user.removeDate}">
+						           		<f:convertDateTime locale="#{msg['locale']}" pattern="#{msg['dateHourPattern']}" />
+						           </h:outputText>
 							    </p:column>
 
 								<p:column headerText="#{msg['app.config.user.lbl.roles']}">
@@ -174,13 +175,22 @@
 									</ui:repeat>
 								</p:column>
 
-							    <p:column style="width:38px">
-
+							    <p:column style="width:48px">
+							        <p:commandButton icon="ui-icon-document" update=":form:panelNewStockType" id="cbEditUser" actionListener="#{configView.prepareEditUser}"
+							        				title="#{msg['app.config.user.edit']}" alt="#{msg['app.config.user.edit']}">
+							        	<f:setPropertyActionListener value="#{user}" target="#{configView.user}" for="cbEditUser"/>
+							        </p:commandButton>
 							    </p:column>
 							    <p:column style="width:48px">
-							        <p:commandButton icon="ui-icon-close" action="#{configView.deleteUser}" update=":form:userContent" id="cbDeleteUser">
-							        	<p:confirm header="#{msg['app.config.user.delete.dlg.confirm']}" message="#{msg['app.config.user.delete.dlg.msg']}" icon="ui-icon-alert" />
+							        <p:commandButton icon="ui-icon-trash" action="#{configView.deleteUser}" update=":form:userContent" id="cbDeleteUser" rendered="#{user.activated}"
+							        				title="#{msg['app.config.user.delete']}" alt="#{msg['app.config.user.delete']}">
+							        	<p:confirm header="#{msg['app.label.confirm']}" message="#{msg['app.config.user.delete.dlg.msg']}" icon="ui-icon-alert" />
 							        	<f:setPropertyActionListener value="#{user}" target="#{configView.user}" for="cbDeleteUser"/>
+							        </p:commandButton>
+							        <p:commandButton icon="ui-icon-check" action="#{configView.activateUser}" update=":form:userContent" id="cbActivateUser" rendered="#{!user.activated}"
+							        				title="#{msg['app.config.user.lbl.activate']}" alt="#{msg['app.config.user.lbl.activate']}">
+							        	<p:confirm header="#{msg['app.label.confirm']}" message="#{msg['app.config.user.activate.dlg.msg']}" icon="ui-icon-alert" />
+							        	<f:setPropertyActionListener value="#{user}" target="#{configView.user}" for="cbActivateUser"/>
 							        </p:commandButton>
 							    </p:column>
 							</p:dataTable>
@@ -190,17 +200,6 @@
 				  </div>
                 </div>
             </div>
-
-		    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
-                <p:toolbar>
-                	<f:facet name="left">
-                		<p:commandButton value="#{msg['app.label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
-                	</f:facet>
-                	<f:facet name="right">
-                		<p:commandButton value="#{msg['app.label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
-                	</f:facet>
-                </p:toolbar>
-		    </p:confirmDialog>
 
 	        <p:dialog widgetVar="addStockTypeDlg" modal="true" position="center" header="#{msg['app.config.stockType.add.dlg.header']}" width="530" showEffect="fade" hideEffect="fade" closeOnEscape="true">
 				<p:panel id="panelNewStockType">
@@ -245,15 +244,20 @@
 				        <p:inputText id="usUsername" type="text" value="#{configView.user.username}" styleClass="initialism"/>
 
 				        <p:outputLabel value="#{msg['app.config.user.lbl.email']}:" for="usEmail" />
-				        <p:inputText id="usEmail" type="text" value="#{configView.user.email}" size="67"/>
+				        <p:inputText id="usEmail" type="text" value="#{configView.user.email}" size="67" validatorMessage="Informe um email valido.">
+				        	<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" for="usEmail"/>
+				        </p:inputText>
 
 						<p:outputLabel value="#{msg['app.config.user.lbl.password']}:" for="usPassword" />
 						<p:password id="usPassword" value="#{configView.user.password}" feedback="true"
 				                    promptLabel="#{msg['app.config.user.lbl.password.promptLabel']}" weakLabel="#{msg['app.config.user.lbl.password.weakLabel']}"
 				                    goodLabel="#{msg['app.config.user.lbl.password.goodLabel']}" strongLabel="#{msg['app.config.user.lbl.password.strongLabel']}" />
 
+						<p:outputLabel value="#{msg['app.config.user.lbl.retypePassword']}:" for="usRetypePassword" />
+						<p:password id="usRetypePassword" value="#{configView.user.retypePassword}"/>
+
 						<p:outputLabel value="#{msg['app.config.user.lbl.roles']}:" for="usRoles" />
-						<p:pickList id="usRoles" value="#{configView.roles}" var="role" itemLabel="#{role.description}" itemValue="#{role}" />
+						<p:pickList id="usRoles" value="#{configView.roles}" var="role" itemLabel="#{role.description}" itemValue="#{role.id}" />
 	                </h:panelGrid>
 	
 	                <p:separator />
@@ -262,11 +266,10 @@
 	                		<p:commandButton value="#{msg['btn.cancel']}" onclick="PF('addUserDlg').hide()" type="button"/>
 	                	</f:facet>
 	                	<f:facet name="right">
-	                		<p:commandButton value="#{msg['btn.add']}" onclick="PF('addUserDlg').hide()" actionListener="#{configView.addUser}" update=":form:userContent"/>
+	                		<p:commandButton value="#{msg['btn.add']}" actionListener="#{configView.addUser}" update=":form:userContent"/>
 	                	</f:facet>
 	                </p:toolbar>
 				</p:panel>
 	        </p:dialog>
-		</h:form>
     </ui:define>
 </ui:composition>

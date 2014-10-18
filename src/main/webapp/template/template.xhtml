@@ -61,6 +61,12 @@
 		        .ui-growl {
 		            top:60px;
 		        }
+
+		    	.ui-toolbar.ui-widget-header {
+				  background-image: none;
+				  color: #fff;
+				  background-color: #428bca;
+		    	}
 			</style>
 		
 			<script>
@@ -222,24 +228,36 @@
 		            </ul>
 		            <!-- /.navbar-collapse -->
 		        </nav>
-		</h:form>
-		        <div id="page-wrapper">
+			</h:form>
+	        <div id="page-wrapper">
+	        	<h:form id="form">
 					<p:growl id="messages" autoUpdate="true"/>
+					<p:ajaxStatus onstart="PF('statusDialog').show();" onsuccess="PF('statusDialog').hide();" />
+
 		            <div class="container-fluid">
 	                    <ui:insert name="body">Content</ui:insert>
+			            <!-- /.container-fluid -->
+
+						<!-- Confirm Dialog -->
+					    <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+			                <p:toolbar>
+			                	<f:facet name="left">
+			                		<p:commandButton value="#{msg['app.label.no']}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+			                	</f:facet>
+			                	<f:facet name="right">
+			                		<p:commandButton value="#{msg['app.label.yes']}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+			                	</f:facet>
+			                </p:toolbar>
+				    	</p:confirmDialog>
+
+					    <p:dialog modal="true" widgetVar="statusDialog" showHeader="false" draggable="false" closable="false" resizable="false" visible="false" position="center" maximizable="false" minimizable="false" >
+					        <p:graphicImage value="../img/ajax-loader.gif" />
+					    </p:dialog>
 		            </div>
-		            <!-- /.container-fluid -->
-				    <p:ajaxStatus styleClass="ajaxLodingStatus">
-				        <f:facet name="start">
-				            <p:graphicImage value="../img/ajax-loader.gif" />
-				        </f:facet>
-				        <f:facet name="complete">
-				            <p:outputLabel value="" />
-				        </f:facet>
-				    </p:ajaxStatus>
-		        </div>
-		        <!-- /#page-wrapper -->
-		
+				</h:form>
+	        </div>
+	        <!-- /#page-wrapper -->
+
 		    <!-- Bootstrap Core JavaScript -->
 		    <script src="../js/bootstrap.min.js"></script>
 		

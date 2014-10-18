@@ -2,6 +2,7 @@ package br.com.dabage.investments.controller;
 
 
 import java.io.Serializable;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +11,7 @@ import javax.annotation.Resource;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.primefaces.model.DualListModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +64,7 @@ public class ConfigView extends BasicView implements Serializable {
 
 		// All Users
 		users = userRepository.findAll();
-
+		prepareRoles();
         return "config";
     }
 
@@ -152,14 +154,36 @@ public class ConfigView extends BasicView implements Serializable {
 		user.setActivateDate(new Date());
 	}
 
+	
+	/**
+	 * Prepare to edit a User
+	 * @param event
+	 */
+	public void prepareEditUser(ActionEvent event) {
+		prepareRoles();
+		roles.getSource().removeAll(user.getRoles());
+		roles.getTarget().addAll(user.getRoles());
+		RequestContext rc = RequestContext.getCurrentInstance();
+	    rc.execute("PF('addUserDlg').show()");
+	}
+
 	/**
 	 * Add a new User
 	 * @param event
 	 */
 	public void addUser(ActionEvent event) {
 		if (!checkUser(user)) return;
+		Object[] array = roles.getTarget().toArray();
+		List<RoleTO> rolesSelected = new ArrayList<RoleTO>();
+		for (int i = 0; i < array.length; i++) {
+			RoleTO role = roleRepository.findOne(new BigInteger((String)array[i]));
+			rolesSelected.add(role);
+		}
+		user.setRoles(rolesSelected);
 		userRepository.save(user);
 		users = userRepository.findAll();
+		RequestContext rc = RequestContext.getCurrentInstance();
+	    rc.execute("PF('addUserDlg').hide()");
 	}
 
 	/**
@@ -168,11 +192,20 @@ public class ConfigView extends BasicView implements Serializable {
 	 */
 	public void editUser(ActionEvent event) {
 		if (!checkUser(user)) return;
+		user.setRoles(roles.getTarget());
 		userRepository.save(user);
 	}
 
 	public void deleteUser() {
 		user.setRemoveDate(new Date());
+		user.setActivated(Boolean.FALSE);
+		userRepository.save(user);
+		users = userRepository.findAll();
+	}
+
+	public void activateUser() {
+		user.setRemoveDate(null);
+		user.setActivated(Boolean.TRUE);
 		userRepository.save(user);
 		users = userRepository.findAll();
 	}
@@ -209,6 +242,21 @@ public class ConfigView extends BasicView implements Serializable {
 			return false;
 		}
 
+		if (user.getRetypePassword() == null || user.getRetypePassword().isEmpty()) {
+			addWarnMessage("Informe novamente a senha.");
+			return false;
+		}
+
+		if (!user.getPassword().equals(user.getRetypePassword())) {
+			addWarnMessage("As senhas informadas não conferem.");
+			return false;
+		}
+		
+		if (roles.getTarget().isEmpty()) {
+			addWarnMessage("Adicione um perfil de acesso ao novo usuário.");
+			return false;
+		}
+		
 		return true;
 	}
 	

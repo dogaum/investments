@@ -12,6 +12,7 @@ import javax.faces.bean.RequestScoped;
 import javax.faces.event.ActionEvent;
 import javax.faces.model.SelectItem;
 
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
 import org.springframework.stereotype.Controller;
 
@@ -36,6 +37,7 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	private CarteiraTO selectedCarteira;
 	private List<CarteiraItemTO> carteiraItens;
+	private Double totalPortfolio;
 
 	private String newName;
 
@@ -65,6 +67,7 @@ public class CarteiraView extends BasicView implements Serializable {
 	public String init() {
 		UserTO user = getUserLoggedIn();
 		carteiras = carteiraRepository.findByUser(user);
+		totalPortfolio = 0D;
 		if (carteiras != null) {
 			firstCarteiraRing = 0;
 			selectedCarteira = carteiras.get(firstCarteiraRing);
@@ -117,6 +120,10 @@ public class CarteiraView extends BasicView implements Serializable {
 				}
 				item.addNegotiation(neg);
 			}
+			totalPortfolio = 0D;
+			for (CarteiraItemTO item : carteiraItens) {
+				totalPortfolio += item.getTotalValue();
+			}
 		}
 	}
 
@@ -136,6 +143,9 @@ public class CarteiraView extends BasicView implements Serializable {
 		negotiationRepository.save(negotiation);
 		negotiation = new NegotiationTO();
 		this.selectCarteira();
+
+		RequestContext rc = RequestContext.getCurrentInstance();
+	    rc.execute("PF('addNegotiationDlg').hide()");
 	}
 
 	public void editNegotiation(RowEditEvent event) {
@@ -244,6 +254,14 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	public void setFirstCarteiraRing(int firstCarteiraRing) {
 		this.firstCarteiraRing = firstCarteiraRing;
+	}
+
+	public Double getTotalPortfolio() {
+		return totalPortfolio;
+	}
+
+	public void setTotalPortfolio(Double totalPortfolio) {
+		this.totalPortfolio = totalPortfolio;
 	}
 
 }
