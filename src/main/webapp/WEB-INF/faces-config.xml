@@ -40,6 +40,11 @@
 			<to-view-id>/view/config.xhtml</to-view-id>
 			<redirect />
 		</navigation-case>
+		<navigation-case>
+			<from-outcome>result</from-outcome>
+			<to-view-id>/view/result.xhtml</to-view-id>
+			<redirect />
+		</navigation-case>
 	</navigation-rule>
 
 	<application>

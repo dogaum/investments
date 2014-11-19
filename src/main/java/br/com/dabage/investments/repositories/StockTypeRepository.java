@@ -15,4 +15,6 @@ public interface StockTypeRepository extends MongoRepository<StockTypeTO, BigInt
 	StockTypeTO save (StockTypeTO stockTypeTO);
 
 	List<StockTypeTO> findByRemoveDateNull();
+
+	StockTypeTO findByName(String name);
 }

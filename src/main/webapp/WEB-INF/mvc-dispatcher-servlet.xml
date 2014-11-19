@@ -13,6 +13,8 @@
 	<!-- Configuração dos beans por anotações -->
 	<context:component-scan annotation-config="true" base-package="br.com.dabage.investments.controller" />
     <context:component-scan annotation-config="true" base-package="br.com.dabage.investments.security" />
+    <context:component-scan annotation-config="true" base-package="br.com.dabage.investments.carteira" />
+    <context:component-scan annotation-config="true" base-package="br.com.dabage.investments.company" />
 
     <mvc:default-servlet-handler/>
 

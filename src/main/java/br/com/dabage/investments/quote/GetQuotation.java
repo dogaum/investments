@@ -65,6 +65,25 @@ public class GetQuotation {
 		return "";
 	}
 
+	public Double getLastQuote(String stock) {
+		
+		try {
+			Document doc = Jsoup.connect(cmaQuoteUrl + stock).get();
+			String[] lines = doc.body().text().split(" ");
+			if (lines.length < 2) {
+				return 0D;
+			}
+			String lastLine = lines[lines.length - 1];
+			String[] lineValues = lastLine.split(",");
+
+			return new Double(lineValues[4]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return 0D;
+	}
+	
 	public JSONObject getJsonData(String stock) {
 
 		try {

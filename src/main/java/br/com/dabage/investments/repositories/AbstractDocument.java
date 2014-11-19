@@ -11,7 +11,7 @@ import org.springframework.data.annotation.Id;
 public class AbstractDocument {
 
 	@Id
-	private BigInteger id;
+	protected BigInteger id;
 
 	/**
 	 * Returns the identifier of the document.

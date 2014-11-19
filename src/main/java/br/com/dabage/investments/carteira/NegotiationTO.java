@@ -1,8 +1,9 @@
 package br.com.dabage.investments.carteira;
 
+import java.math.BigInteger;
 import java.util.Date;
 
-import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import br.com.dabage.investments.config.StockTypeTO;
@@ -11,29 +12,46 @@ import br.com.dabage.investments.repositories.AbstractDocument;
 @Document(collection="negotiations")
 public class NegotiationTO extends AbstractDocument implements Comparable<NegotiationTO> {
 
+	@Indexed
 	private String stock;
 
 	private Double value;
 
-	private Date dtNegociation;
+	private Date dtNegotiation;
 
 	private Long quantity;
 
-	private NegotiationType negociationType;
+	private NegotiationType negotiationType;
 
 	private Double costs;
 
-	/** Data de criação do item; */
+	/** Object creation date */
 	private Date addDate;
 
-	/** Data de remoção do item. */
+	/** Object remove date */
 	private Date removeDate;
 
-	@DBRef
-	private CarteiraTO carteira;
+	/** Avg value considered for calcs */
+	private Double avgBuyValue;
 
-	@DBRef
+	/** If this negotiation was calculated */
+	private Boolean calculated;
+
+	/** Calc date */
+	private Date calculateDate;
+
+	/** Result Value of de Sell */
+	private Double calculateValue;
+
+	@Indexed
+	private BigInteger idCarteira;
+
 	private StockTypeTO stockType;
+
+	/** If this negotiation is a day trade */
+	private Boolean dayTrade;
+
+	private Double feeDayTrade;
 
 	public String getStock() {
 		return stock;
@@ -51,12 +69,12 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 		this.value = value;
 	}
 
-	public Date getDtNegociation() {
-		return dtNegociation;
+	public Date getDtNegotiation() {
+		return dtNegotiation;
 	}
 
-	public void setDtNegociation(Date dtNegociation) {
-		this.dtNegociation = dtNegociation;
+	public void setDtNegotiation(Date dtNegotiation) {
+		this.dtNegotiation = dtNegotiation;
 	}
 
 	public Long getQuantity() {
@@ -67,12 +85,12 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 		this.quantity = quantity;
 	}
 
-	public NegotiationType getNegociationType() {
-		return negociationType;
+	public NegotiationType getNegotiationType() {
+		return negotiationType;
 	}
 
-	public void setNegociationType(NegotiationType negociationType) {
-		this.negociationType = negociationType;
+	public void setNegotiationType(NegotiationType negotiationType) {
+		this.negotiationType = negotiationType;
 	}
 
 	public Double getCosts() {
@@ -83,12 +101,12 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 		this.costs = costs;
 	}
 
-	public CarteiraTO getCarteira() {
-		return carteira;
+	public BigInteger getIdCarteira() {
+		return idCarteira;
 	}
 
-	public void setCarteira(CarteiraTO carteira) {
-		this.carteira = carteira;
+	public void setIdCarteira(BigInteger idCarteira) {
+		this.idCarteira = idCarteira;
 	}
 
 	public Date getAddDate() {
@@ -115,17 +133,66 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 		this.stockType = stockType;
 	}
 
+	public Boolean getCalculated() {
+		return calculated;
+	}
+
+	public void setCalculated(Boolean calculated) {
+		this.calculated = calculated;
+	}
+
+	public Date getCalculateDate() {
+		return calculateDate;
+	}
+
+	public void setCalculateDate(Date calculateDate) {
+		this.calculateDate = calculateDate;
+	}
+
+	public Double getAvgBuyValue() {
+		return avgBuyValue;
+	}
+
+	public void setAvgBuyValue(Double avgBuyValue) {
+		this.avgBuyValue = avgBuyValue;
+	}
+
+	public Double getCalculateValue() {
+		return calculateValue;
+	}
+
+	public void setCalculateValue(Double calculateValue) {
+		this.calculateValue = calculateValue;
+	}
+
+	public Boolean getDayTrade() {
+		return dayTrade;
+	}
+
+	public void setDayTrade(Boolean dayTrade) {
+		this.dayTrade = dayTrade;
+	}
+
+	public Double getFeeDayTrade() {
+		return feeDayTrade;
+	}
+
+	public void setFeeDayTrade(Double feeDayTrade) {
+		this.feeDayTrade = feeDayTrade;
+	}
+
 	@Override
 	public String toString() {
-		return "Movimentação [Carteira: " + carteira.getName() + " Código: " + stock + " Valor: " + value
-				+ " Data: " + dtNegociation + " Qtde: " + quantity
-				+ " Tipo: " + negociationType + " Custos: " + costs
+		return "Movimentação [Carteira id: " + idCarteira + " Código: " + stock + " Valor: " + value
+				+ " Data: " + dtNegotiation + " Qtde: " + quantity
+				+ " Tipo: " + negotiationType + " Custos: " + costs
 				+ "]";
 	}
 
 	@Override
 	public int compareTo(NegotiationTO o) {
-        int lastCmp = dtNegociation.compareTo(o.dtNegociation);
-        return (lastCmp != 0 ? lastCmp : dtNegociation.compareTo(o.dtNegociation));
+        int lastCmp = dtNegotiation.compareTo(o.dtNegotiation);
+        return (lastCmp != 0 ? lastCmp : dtNegotiation.compareTo(o.dtNegotiation));
 	}
+
 }

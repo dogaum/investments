@@ -10,22 +10,28 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
+import br.com.dabage.investments.config.StockTypeTO;
 import br.com.dabage.investments.repositories.CompanyRepository;
+import br.com.dabage.investments.repositories.StockTypeRepository;
 
 @Component
 public class InsertFIITickers {
 
 	@Resource
 	CompanyRepository companyRepository;
+
+	@Resource
+	StockTypeRepository stockTypeRepository;
 	
 	/**
 	 * @param args
 	 */
 	public void run() {
-			String uolTickers = "http://bmfbovespa.com.br/Fundos-Listados/FundosListados.aspx?tipoFundo=imobiliario&Idioma=pt-br";
+			String bmfTickers = "http://bmfbovespa.com.br/Fundos-Listados/FundosListados.aspx?tipoFundo=imobiliario&Idioma=pt-br";
 			boolean first = true;
+			StockTypeTO stockType = stockTypeRepository.findByName("FII");
 			try {
-				Document doc = Jsoup.connect(uolTickers).get();
+				Document doc = Jsoup.connect(bmfTickers).get();
 				Element pagina = doc.getElementById("ctl00_contentPlaceHolderConteudo_divResultado");
 				Elements trs = pagina.getElementsByTag("tr");
 				trs.text();
@@ -49,6 +55,8 @@ public class InsertFIITickers {
 					CompanyTO obj = companyRepository.findByTicker(tickerFull);
 					if (obj == null) {
 						CompanyTO company = new CompanyTO(tickerFull, name.text(), fullName.text());
+						company.setStockType(stockType);
+						System.out.println(company);
 						companyRepository.save(company);
 					}
 				}

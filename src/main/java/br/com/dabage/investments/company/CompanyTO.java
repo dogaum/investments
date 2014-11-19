@@ -1,8 +1,10 @@
 package br.com.dabage.investments.company;
 
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import br.com.dabage.investments.config.StockTypeTO;
 import br.com.dabage.investments.repositories.AbstractDocument;
 
 @Document(collection="companies")
@@ -23,6 +25,9 @@ public class CompanyTO extends AbstractDocument {
 	private String ticker;
 	private String name;
 	private String fullName;
+
+	@DBRef
+	private StockTypeTO stockType;
 
 	public String getPrefix() {
 		return prefix;
@@ -51,6 +56,14 @@ public class CompanyTO extends AbstractDocument {
 
 	public void setFullName(String fullName) {
 		this.fullName = fullName;
+	}
+
+	public StockTypeTO getStockType() {
+		return stockType;
+	}
+
+	public void setStockType(StockTypeTO stockType) {
+		this.stockType = stockType;
 	}
 
 	@Override

@@ -3,6 +3,7 @@ package br.com.dabage.investments.carteira;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -18,6 +19,7 @@ public class CarteiraTO extends AbstractDocument {
 		this.status = CarteiraStatus.Ativa;
 	}
 
+	@Indexed
 	@DBRef
 	private UserTO user;
 
@@ -27,6 +29,9 @@ public class CarteiraTO extends AbstractDocument {
 
 	@DBRef
 	private List<NegotiationTO> negotiations;
+
+	@DBRef
+	private List<IncomeTO> incomes;
 
 	private Date deleteDate;
 
@@ -80,5 +85,12 @@ public class CarteiraTO extends AbstractDocument {
 		this.status = status;
 	}
 
+	public List<IncomeTO> getIncomes() {
+		return incomes;
+	}
+
+	public void setIncomes(List<IncomeTO> incomes) {
+		this.incomes = incomes;
+	}
 
 }

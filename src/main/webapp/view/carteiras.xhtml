@@ -64,7 +64,7 @@
 	                        </div>
 	                        <div class="panel-footer">
 	                            <span class="pull-left">
-							        <p:commandLink value="#{msg['app.portfolio.lbl.detail']}" title="#{msg['app.portfolio.link.detail']}" action="#{carteiraView.selectCarteira}" update=":form:portfolioDetail"
+							        <p:commandLink value="#{msg['app.portfolio.lbl.detail']}" title="#{msg['app.portfolio.link.detail']}" action="#{carteiraView.selectCarteira}" update=":form"
 							        			  style="float:left;margin-right:10px">
 							            <f:setPropertyActionListener value="#{portfolio}" target="#{carteiraView.selectedCarteira}" />
 						        	</p:commandLink>
@@ -88,44 +88,90 @@
 						        	<b><h:outputText value="#{msg['app.portfolio.created']} " /></b> <h:outputText value="#{carteiraView.selectedCarteira.createDate}"><f:convertDateTime locale="#{msg['locale']}"  /></h:outputText>
 						        </p>
 
-							    <p:commandLink id="clNewNegotiation" onclick="PF('addNegotiationDlg').show()" actionListener="#{carteiraView.prepareNegotiation}"
-							    				update=":form:panelNewNegotiation">
-							        <h:outputText value="#{msg['app.portfolio.negotiation.add']}" />
-							    </p:commandLink>
-
+				                <p:toolbar>
+				                	<f:facet name="left">
+									    <p:commandLink id="clNewNegotiation" onclick="PF('addNegotiationDlg').show()" actionListener="#{carteiraView.prepareNegotiation}"
+									    				update=":form:panelNewNegotiation">
+									        <i class="fa fa-fw fa-plus-circle"></i>
+									        <h:outputText value="#{msg['app.portfolio.negotiation.add']}" />
+									    </p:commandLink>
+				                	</f:facet>
+				                	<f:facet name="right">
+									    <p:commandLink id="clNewIncome" onclick="PF('addIncomeDlg').show()" actionListener="#{carteiraView.prepareIncome}"
+									    				update=":form:panelNewIncome">
+									        <i class="fa fa-fw fa-usd"></i>
+									        <h:outputText value="#{msg['app.portfolio.income.add']}" />
+									    </p:commandLink>				                		
+				                	</f:facet>
+				                </p:toolbar>
 								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}" emptyMessage="#{msg['pf.datatable.noresults']}">
 									<p:column style="width:38px">
 							            <p:rowToggler />
 							        </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.symbol']}">
+								    <p:column headerText="#{msg['app.portfolio.symbol']}" sortBy="#{item.stock}" style="text-align:center" width="90">
 								        <h:outputText value="#{item.stock}" />
 								    </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.qty']}">
+								    <p:column headerText="#{msg['app.portfolio.qty']}" style="text-align:right" width="100">
 								        <h:outputText value="#{item.quantity}" />
 								    </p:column>
 								 
-								    <p:column headerText="#{msg['app.portfolio.avgValue']}">
+								    <p:column headerText="#{msg['app.portfolio.avgValue']}" style="text-align:right" width="110">
 								        <h:outputText value="#{item.avgValue}">
 								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
-								 
-								    <p:column headerText="#{msg['app.portfolio.total']}">
+
+								    <p:column headerText="#{msg['app.portfolio.actualValue']}" style="text-align:right" width="110">
+								        <h:outputText value="#{item.actualValue}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.actavgValue']}" sortBy="#{item.percentActAvgValue}" style="text-align:right" width="110">
+								        <h:outputText value="#{item.percentActAvgValue}">
+								        	<f:convertNumber type="percent" minFractionDigits="2"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.totalAcquisition']}" sortBy="#{item.totalValue}" style="text-align:right">
 								        <h:outputText value="#{item.totalValue}">
 								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
+								    <p:column headerText="#{msg['app.portfolio.totalIncome']}" sortBy="#{item.totalIncomeValue}" style="text-align:right">
+								        <h:outputText value="#{item.totalIncomeValue}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.totalActual']}" sortBy="#{item.totalActual}" style="text-align:right">
+								        <h:outputText value="#{item.totalActual}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.resultValue']}" style="text-align:right">
+								        <h:outputText value="#{item.totalCalculateResult}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.totalPlusIncome']}" style="text-align:right">
+								        <h:outputText value="#{item.totalPlusIncome}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
 							        <p:rowExpansion>
 										<p:dataTable widgetVar="negItemTable" var="negItem" value="#{item.negotiations}" style="margin-left:27px" rowKey="#{negItem.id}"
 													 editable="true">
 
 											<p:ajax event="rowEdit" listener="#{carteiraView.editNegotiation}" update=":form:portfolioDetail" />
  
- 										    <p:column headerText="#{msg['app.portfolio.date']}" sortBy="#{negItem.dtNegociation}">
-										        <h:outputText value="#{negItem.dtNegociation}">
+ 										    <p:column headerText="#{msg['app.portfolio.date']}" sortBy="#{negItem.dtNegotiation}">
+										        <h:outputText value="#{negItem.dtNegotiation}">
 										        	<f:convertDateTime locale="#{msg['locale']}"  />
 										        </h:outputText>
 										    </p:column>
@@ -134,11 +180,11 @@
 										        <h:outputText value="#{negItem.stock}" />
 										    </p:column>
 
-										    <p:column headerText="#{msg['app.portfolio.type']}" sortBy="#{negItem.negociationType}">
+										    <p:column headerText="#{msg['app.portfolio.type']}" sortBy="#{negItem.negotiationType}">
 									           <p:cellEditor>
-									               <f:facet name="output"><h:outputText value="#{negItem.negociationType}" /></f:facet>
+									               <f:facet name="output"><h:outputText value="#{negItem.negotiationType}" /></f:facet>
 									               <f:facet name="input">
-												       <p:selectOneMenu id="negType" value="#{negItem.negociationType}" style="width:100%">
+												       <p:selectOneMenu id="negType" value="#{negItem.negotiationType}" style="width:100%">
 								            		   		<f:selectItems value="#{carteiraView.negotiationTypes}" />
 												       </p:selectOneMenu>
 									               </f:facet>
@@ -174,6 +220,18 @@
 									            </p:cellEditor>
 										    </p:column>
 
+										    <p:column headerText="#{msg['app.portfolio.avgValue']}" sortBy="#{negItem.calculateValue}">
+										        <h:outputText value="#{negItem.avgBuyValue}">
+										        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+										        </h:outputText>
+										    </p:column>
+
+										    <p:column headerText="#{msg['app.portfolio.resultValue']}" sortBy="#{negItem.calculateValue}">
+										        <h:outputText value="#{negItem.calculateValue}">
+										        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+										        </h:outputText>
+										    </p:column>
+
 										    <p:column style="width:38px">
 										        <p:rowEditor />
 										    </p:column>
@@ -187,10 +245,38 @@
         							</p:rowExpansion>
 									<p:columnGroup type="footer">
 							            <p:row>
-							                <p:column colspan="4" style="text-align:right" footerText="Total da carteira:" />
-							                <p:column>
+							                <p:column colspan="6" style="text-align:right" footerText="Total da carteira:" />
+							                <p:column style="text-align:right">
 									            <f:facet name="footer">
 											        <h:outputText value="#{carteiraView.totalPortfolio}">
+											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+											        </h:outputText>
+									            </f:facet>
+							                </p:column>
+							                <p:column style="text-align:right">
+									            <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.totalPortfolioIncome}">
+											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+											        </h:outputText>
+									            </f:facet>
+							                </p:column>
+							                <p:column style="text-align:right">
+									            <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.totalPortfolioActual}">
+											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+											        </h:outputText>
+									            </f:facet>
+							                </p:column>
+							                <p:column style="text-align:right">
+									            <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.totalCalculateResult}">
+											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+											        </h:outputText>
+									            </f:facet>
+							                </p:column>
+							                <p:column style="text-align:right">
+									            <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.totalPortfolioActualPlusIncome}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
@@ -225,16 +311,16 @@
 						<p:panel id="panelNewNegotiation">
 			                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty carteiraView.negotiation}">
 			                    <p:outputLabel for="negType" value="#{msg['app.portfolio.type']}: " />
-						        <p:selectOneMenu id="negType" value="#{carteiraView.negotiation.negociationType}" >
+						        <p:selectOneMenu id="negType" value="#{carteiraView.negotiation.negotiationType}" >
 		            				<f:selectItems value="#{carteiraView.negotiationTypes}" />
 						        </p:selectOneMenu>
-		
+
 						        <p:outputLabel value="#{msg['app.portfolio.symbol']}:" for="negSymbol" />
 						        <p:autoComplete id="negSymbol" minQueryLength="3" value="#{carteiraView.negotiation.stock}"
 						        			 completeMethod="#{chartView.completeStock}" effect="fade" />
 		
 		 						<p:outputLabel for="negDate" value="#{msg['app.portfolio.date']}:" />
-		        				<p:calendar id="negDate" value="#{carteiraView.negotiation.dtNegociation}" pattern="dd/MM/yyyy" mask="true" />
+		        				<p:calendar id="negDate" value="#{carteiraView.negotiation.dtNegotiation}" pattern="dd/MM/yyyy" mask="true" />
 		
 								<p:outputLabel value="#{msg['app.portfolio.qty']}:" for="negQuantity" />
 								<p:spinner id="negQuantity" value="#{carteiraView.negotiation.quantity}" min="0" />
@@ -253,6 +339,38 @@
 			                	</f:facet>
 			                	<f:facet name="right">
 			                		<p:commandButton value="#{msg['btn.add']}" actionListener="#{carteiraView.addNegotiation}" update=":form:portfolioDetail"/>
+			                	</f:facet>
+			                </p:toolbar>
+						</p:panel>
+			        </p:dialog>
+
+			        <p:dialog widgetVar="addIncomeDlg" modal="true" position="center" header="#{msg['app.portfolio.income.header']}" width="530" showEffect="fade" hideEffect="fade" closeOnEscape="true">
+						<p:panel id="panelNewIncome">
+			                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty carteiraView.income}">
+			                    <p:outputLabel for="incomeType" value="#{msg['app.portfolio.income.type']}: " />
+						        <p:selectOneMenu id="incomeType" value="#{carteiraView.income.type}" >
+		            				<f:selectItems value="#{carteiraView.incomeTypes}" />
+						        </p:selectOneMenu>
+		
+						        <p:outputLabel value="#{msg['app.portfolio.symbol']}:" for="incomeSymbol" />
+						        <p:autoComplete id="incomeSymbol" minQueryLength="3" value="#{carteiraView.income.stock}" 
+						        			 completeMethod="#{chartView.completeStock}" effect="fade" />
+		
+		 						<p:outputLabel for="incomeDate" value="#{msg['app.portfolio.date']}:" />
+		        				<p:calendar id="incomeDate" value="#{carteiraView.income.incomeDate}" pattern="dd/MM/yyyy" mask="true" />
+		
+								<p:outputLabel value="#{msg['app.portfolio.income.value']}:" for="incomeValue" />
+								<pe:inputNumber id="incomeValue" value="#{carteiraView.income.value}"  symbol="#{msg['currencySymbol']} " />
+		
+			                </h:panelGrid>
+
+			                <p:separator />
+			                <p:toolbar>
+			                	<f:facet name="left">
+			                		<p:commandButton value="#{msg['btn.cancel']}" onclick="PF('addIncomeDlg').hide()" type="button"/>
+			                	</f:facet>
+			                	<f:facet name="right">
+			                		<p:commandButton value="#{msg['btn.add']}" actionListener="#{carteiraView.addIncome}" update=":form:portfolioDetail"/>
 			                	</f:facet>
 			                </p:toolbar>
 						</p:panel>
