@@ -7,22 +7,23 @@ import java.util.List;
 
 import br.com.dabage.investments.config.StockTypeTO;
 
-public class ResultTO implements Serializable {
+public class ResultTO implements Serializable, Comparable<ResultTO> {
 
 	/** */
 	private static final long serialVersionUID = 8491680468358158592L;
 
-	public ResultTO (int yearMonth, StockTypeTO stockType, Boolean dayTrade) {
+	public ResultTO (Integer yearMonth, StockTypeTO stockType, Boolean dayTrade) {
 		this.yearMonth = yearMonth;
 		this.stockType = stockType;
 		this.dayTrade = dayTrade;
 		negotiations = new ArrayList<NegotiationTO>();
 		result = 0D;
 		fee = 0D;
+		feeAmount = 0D;
 		totalSell = 0D;
 	}
 
-	private int yearMonth;
+	private Integer yearMonth;
 
 	private StockTypeTO stockType;
 
@@ -32,7 +33,11 @@ public class ResultTO implements Serializable {
 
 	private Double result; 
 
+	private Double resultAmount;
+
 	private Double fee;
+
+	private Double feeAmount;
 
 	private Date feePayDate;
 
@@ -50,16 +55,13 @@ public class ResultTO implements Serializable {
 	 * @return
 	 */
 	public Double getTotalFee() {
-		if (stockType.getExempt() == null || stockType.getExempt().doubleValue() == 0.0) {
-			if (result > 0) {
-				fee += result * (stockType.getIrNormal() / 100);
-			}
+
+		if (getFee() + feeAmount < 10D) {
+			return 0D;
 		} else {
-			if (totalSell > stockType.getExempt()) {
-				fee += result * (stockType.getIrNormal() / 100);
-			}
+			return getFee() + feeAmount;
 		}
-		return fee;
+
 	}
 
 	/** Returns a year month formatted */
@@ -75,7 +77,7 @@ public class ResultTO implements Serializable {
 		return yearMonth;
 	}
 
-	public void setYearMonth(int yearMonth) {
+	public void setYearMonth(Integer yearMonth) {
 		this.yearMonth = yearMonth;
 	}
 
@@ -112,6 +114,16 @@ public class ResultTO implements Serializable {
 	}
 
 	public Double getFee() {
+		if (stockType.getExempt() == null || stockType.getExempt().doubleValue() == 0.0) {
+			if (resultAmount > 0) {
+				fee = resultAmount * (stockType.getIrNormal() / 100);
+			}
+		} else {
+			if (totalSell > stockType.getExempt()) {
+				fee = resultAmount * (stockType.getIrNormal() / 100);
+			}
+		}
+
 		return fee;
 	}
 
@@ -135,6 +147,22 @@ public class ResultTO implements Serializable {
 		this.dayTrade = dayTrade;
 	}
 
+	public Double getResultAmount() {
+		return resultAmount;
+	}
+
+	public void setResultAmount(Double resultAmount) {
+		this.resultAmount = resultAmount;
+	}
+
+	public Double getFeeAmount() {
+		return feeAmount;
+	}
+
+	public void setFeeAmount(Double feeAmount) {
+		this.feeAmount = feeAmount;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -143,7 +171,8 @@ public class ResultTO implements Serializable {
 				+ ((dayTrade == null) ? 0 : dayTrade.hashCode());
 		result = prime * result
 				+ ((stockType == null) ? 0 : stockType.hashCode());
-		result = prime * result + yearMonth;
+		result = prime * result
+				+ ((yearMonth == null) ? 0 : yearMonth.hashCode());
 		return result;
 	}
 
@@ -166,9 +195,26 @@ public class ResultTO implements Serializable {
 				return false;
 		} else if (!stockType.equals(other.stockType))
 			return false;
-		if (yearMonth != other.yearMonth)
+		if (yearMonth == null) {
+			if (other.yearMonth != null)
+				return false;
+		} else if (!yearMonth.equals(other.yearMonth))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "ResultTO [yearMonth=" + yearMonth + ", stockType=" + stockType
+				+ ", totalSell=" + totalSell + ", result=" + result
+				+ ", resultAmount=" + resultAmount + ", fee=" + fee
+				+ ", dayTrade=" + dayTrade + "]";
+	}
+
+	@Override
+	public int compareTo(ResultTO arg0) {
+        int lastCmp = yearMonth.compareTo(arg0.yearMonth);
+        return (lastCmp != 0 ? lastCmp : yearMonth.compareTo(arg0.yearMonth));
 	}
 
 }

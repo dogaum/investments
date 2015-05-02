@@ -1,5 +1,7 @@
 package br.com.dabage.investments.company;
 
+import java.util.List;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;

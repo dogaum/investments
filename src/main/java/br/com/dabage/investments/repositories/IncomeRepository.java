@@ -15,4 +15,6 @@ public interface IncomeRepository extends MongoRepository<IncomeTO, BigInteger> 
 	IncomeTO save (IncomeTO incomeTO);
 
 	List<IncomeTO> findByIdCarteira(BigInteger idCarteira);
+
+	IncomeTO findTopByOrderByIncomeDateDescAddDateDesc();
 }

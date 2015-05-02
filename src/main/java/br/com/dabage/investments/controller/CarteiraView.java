@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -15,6 +16,7 @@ import javax.faces.model.SelectItem;
 
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.RowEditEvent;
+import org.primefaces.model.chart.PieChartModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -25,9 +27,11 @@ import br.com.dabage.investments.carteira.IncomeTypes;
 import br.com.dabage.investments.carteira.NegotiationTO;
 import br.com.dabage.investments.carteira.NegotiationType;
 import br.com.dabage.investments.company.CompanyTO;
+import br.com.dabage.investments.company.IncomeCompanyTO;
 import br.com.dabage.investments.quote.GetQuotation;
 import br.com.dabage.investments.repositories.CarteiraRepository;
 import br.com.dabage.investments.repositories.CompanyRepository;
+import br.com.dabage.investments.repositories.IncomeCompanyRepository;
 import br.com.dabage.investments.repositories.IncomeRepository;
 import br.com.dabage.investments.repositories.NegotiationRepository;
 import br.com.dabage.investments.user.UserTO;
@@ -43,11 +47,6 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	private CarteiraTO selectedCarteira;
 	private List<CarteiraItemTO> carteiraItens;
-	private Double totalPortfolio;
-	private Double totalPortfolioActual;
-	private Double totalPortfolioIncome;
-	private Double totalCalculateResult;
-	private Double totalPortfolioActualPlusIncome;
 
 	private String newName;
 
@@ -59,7 +58,12 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	private int firstCarteiraRing;
 
-    @Resource
+	private PieChartModel pieModelPre;
+	private PieChartModel pieModelPos;
+
+	private boolean emptyPosition;
+
+	@Resource
     CarteiraRepository carteiraRepository;
 
 	@Resource
@@ -70,6 +74,9 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	@Resource
 	IncomeRepository incomeRepository;
+
+	@Resource
+	IncomeCompanyRepository incomeCompanyRepository;
 	
 	@Autowired
 	GetQuotation getQuotation;
@@ -87,13 +94,13 @@ public class CarteiraView extends BasicView implements Serializable {
 	public String init() {
 		UserTO user = getUserLoggedIn();
 		carteiras = carteiraRepository.findByUser(user);
-		totalPortfolio = 0D;
+		emptyPosition = false;
 		if (carteiras != null && !carteiras.isEmpty()) {
 			firstCarteiraRing = 0;
 			selectedCarteira = carteiras.get(firstCarteiraRing);
 			selectCarteira();
+			showEmptyPosition();
 		}
-
 		return "carteiras";
 	}
 
@@ -107,6 +114,25 @@ public class CarteiraView extends BasicView implements Serializable {
 		carteiras.add(carteira);
 		carteiraRepository.save(carteira);
 		newName = "";
+	}
+
+	/**
+	 * Show or not empty positions
+	 */
+	public void showEmptyPosition() {
+		if (carteiraItens != null) {
+			if (emptyPosition) {
+				selectCarteira();
+			} else {
+				Iterator<CarteiraItemTO> iteItens = carteiraItens.iterator();
+				while (iteItens.hasNext()) {
+					CarteiraItemTO item = iteItens.next();
+					if (item.getQuantity().equals(0L)) {
+						iteItens.remove();
+					}
+				}
+			}
+		}
 	}
 
 	/**
@@ -143,7 +169,7 @@ public class CarteiraView extends BasicView implements Serializable {
 			if (selectedCarteira.getIncomes() == null) {
 				selectedCarteira.setIncomes(new ArrayList<IncomeTO>());
 			}
-			totalPortfolioIncome = 0D;
+			selectedCarteira.setTotalPortfolioIncome(0D);
 			for (IncomeTO inc : selectedCarteira.getIncomes()) {
 				CarteiraItemTO item = new CarteiraItemTO(inc.getStock());
 				if (carteiraItens.contains(item)) {
@@ -153,23 +179,72 @@ public class CarteiraView extends BasicView implements Serializable {
 					carteiraItens.add(item);
 				}
 				item.addIncome(inc);
-				totalPortfolioIncome += inc.getValue();
+				selectedCarteira.setTotalPortfolioIncome(selectedCarteira.getTotalPortfolioIncome() + inc.getValue());
 			}
 
-			totalPortfolio = 0D;
-			totalPortfolioActual = 0D;
-			totalCalculateResult = 0D;
+			selectedCarteira.setTotalPortfolio(0D);
+			selectedCarteira.setTotalPortfolioActual(0D);
+			selectedCarteira.setTotalCalculateResult(0D);
 			for (CarteiraItemTO item : carteiraItens) {
-				totalPortfolio += item.getTotalValue();
-				item.setActualValue(getQuotation.getLastQuote(item.getStock()));
-				totalPortfolioActual += item.getTotalActual();
-				totalCalculateResult += item.getTotalCalculateResult();
+				selectedCarteira.setTotalPortfolio(selectedCarteira.getTotalPortfolio() + item.getTotalValue());
+				item.setActualValue(getQuotation.getLastQuoteCache(item.getStock()));
+				IncomeCompanyTO lastIncomeCompany = incomeCompanyRepository.findTopByStockOrderByIncomeDateDesc(item.getStock());
+				item.setLastIncomeCompany(lastIncomeCompany);
+				if (lastIncomeCompany != null) {
+					Double actualDY = (lastIncomeCompany.getValue() / item.getActualValue());
+					item.setActualDY(actualDY);					
+
+					Double buyDY = (lastIncomeCompany.getValue() / item.getAvgValue());
+					item.setBuyDY(buyDY);
+				}
+
+				selectedCarteira.setTotalPortfolioActual(selectedCarteira.getTotalPortfolioActual() + item.getTotalActual());
+				selectedCarteira.setTotalCalculateResult(selectedCarteira.getTotalCalculateResult() + item.getTotalCalculateResult());
 			}
-			totalPortfolioActualPlusIncome = totalPortfolioActual + totalPortfolioIncome + totalCalculateResult;
+			selectedCarteira.setTotalPortfolioActualPlusIncome(selectedCarteira.getTotalPortfolioIncome() + selectedCarteira.getTotalCalculateResult());
+			selectedCarteira.setPercentTotalActual((selectedCarteira.getTotalPortfolioActual() / selectedCarteira.getTotalPortfolio()) - 1);
+			selectedCarteira.setPercentTotalPos(((selectedCarteira
+					.getTotalPortfolioActual() + selectedCarteira
+					.getTotalPortfolioActualPlusIncome()) / selectedCarteira
+					.getTotalPortfolio()) - 1);
+
+			// Last Negotitation
+			NegotiationTO lastNegotiation = selectedCarteira.getNegotiations().get(selectedCarteira.getNegotiations().size() - 1);
+			selectedCarteira.setLastNegotiation(lastNegotiation);
+
+			// Last Income
+			IncomeTO lastIncome = incomeRepository.findTopByOrderByIncomeDateDescAddDateDesc();
+			selectedCarteira.setLastIncome(lastIncome);
+
 			Collections.sort(carteiraItens);
+			createPieCharts();
 		}
 	}
 
+	private void createPieCharts() {
+		pieModelPre = new PieChartModel();
+		pieModelPos = new PieChartModel();
+		for (CarteiraItemTO item : carteiraItens) {
+			if (item.getQuantity() > 0) {
+				pieModelPre.set(item.getStock(), item.getTotalValue());
+				pieModelPos.set(item.getStock(), item.getTotalActual());
+			}
+		}
+        pieModelPre.setTitle("Alocação de Compra");
+        pieModelPre.setLegendPosition("w");
+        pieModelPre.setFill(true);
+        pieModelPre.setShowDataLabels(true);
+        pieModelPre.setDiameter(450);
+        pieModelPre.setLegendCols(2);
+
+        pieModelPos.setTitle("Alocação preço atual");
+        pieModelPos.setLegendPosition("e");
+        pieModelPos.setFill(true);
+        pieModelPos.setShowDataLabels(true);
+        pieModelPos.setDiameter(450);
+        pieModelPos.setLegendCols(2);
+	}
+	
 	/**
 	 * Prepara insercao de negociacao
 	 * @param event
@@ -388,14 +463,6 @@ public class CarteiraView extends BasicView implements Serializable {
 		this.firstCarteiraRing = firstCarteiraRing;
 	}
 
-	public Double getTotalPortfolio() {
-		return totalPortfolio;
-	}
-
-	public void setTotalPortfolio(Double totalPortfolio) {
-		this.totalPortfolio = totalPortfolio;
-	}
-
 	public IncomeTO getIncome() {
 		return income;
 	}
@@ -412,37 +479,20 @@ public class CarteiraView extends BasicView implements Serializable {
 		this.incomeTypes = incomeTypes;
 	}
 
-	public Double getTotalPortfolioActual() {
-		return totalPortfolioActual;
+	public PieChartModel getPieModelPre() {
+		return pieModelPre;
 	}
 
-	public void setTotalPortfolioActual(Double totalPortfolioActual) {
-		this.totalPortfolioActual = totalPortfolioActual;
+	public PieChartModel getPieModelPos() {
+		return pieModelPos;
 	}
 
-	public Double getTotalPortfolioIncome() {
-		return totalPortfolioIncome;
+	public boolean isEmptyPosition() {
+		return emptyPosition;
 	}
 
-	public void setTotalPortfolioIncome(Double totalPortfolioIncome) {
-		this.totalPortfolioIncome = totalPortfolioIncome;
-	}
-
-	public Double getTotalPortfolioActualPlusIncome() {
-		return totalPortfolioActualPlusIncome;
-	}
-
-	public void setTotalPortfolioActualPlusIncome(
-			Double totalPortfolioActualPlusIncome) {
-		this.totalPortfolioActualPlusIncome = totalPortfolioActualPlusIncome;
-	}
-
-	public Double getTotalCalculateResult() {
-		return totalCalculateResult;
-	}
-
-	public void setTotalCalculateResult(Double totalCalculateResult) {
-		this.totalCalculateResult = totalCalculateResult;
+	public void setEmptyPosition(boolean emptyPosition) {
+		this.emptyPosition = emptyPosition;
 	}
 
 }

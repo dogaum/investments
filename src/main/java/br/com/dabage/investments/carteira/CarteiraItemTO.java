@@ -5,6 +5,8 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.dabage.investments.company.IncomeCompanyTO;
+
 public class CarteiraItemTO implements Comparable<CarteiraItemTO> {
 
 	public CarteiraItemTO(String stock) {
@@ -32,6 +34,10 @@ public class CarteiraItemTO implements Comparable<CarteiraItemTO> {
 
 	private Double actualValue;
 
+	private Double actualDY;
+
+	private Double buyDY;
+
 	/** Summaring */
 
 	private Double percentActAvgValue;
@@ -42,13 +48,17 @@ public class CarteiraItemTO implements Comparable<CarteiraItemTO> {
 
 	private Double totalIncomeValue;
 
-	private Double totalPlusIncome;
+	private Double resultPlusIncome;
 
 	private Double totalCalculateResult;
 
+	private Double totalPercentPos;
+	
 	private List<NegotiationTO> negotiations;
 
 	private List<IncomeTO> incomes;
+
+	private IncomeCompanyTO lastIncomeCompany;
 
 	public void addNegotiation(NegotiationTO neg) {
 		// Add to the list
@@ -142,10 +152,10 @@ public class CarteiraItemTO implements Comparable<CarteiraItemTO> {
 		return totalActual;
 	}
 
-	public Double getTotalPlusIncome() {
-		totalPlusIncome = getTotalActual() + getTotalIncomeValue() + getTotalCalculateResult();
+	public Double getResultPlusIncome() {
+		resultPlusIncome = getTotalIncomeValue() + getTotalCalculateResult();
 
-		return totalPlusIncome;
+		return resultPlusIncome;
 	}
 
 	public Double getActualValue() {
@@ -184,6 +194,40 @@ public class CarteiraItemTO implements Comparable<CarteiraItemTO> {
 
 	public void setPercentActAvgValue(Double percentActAvgValue) {
 		this.percentActAvgValue = percentActAvgValue;
+	}
+
+	public Double getTotalPercentPos() {
+		totalPercentPos = ((getTotalActual() + getTotalIncomeValue() + getTotalCalculateResult()) / getTotalValue()) - 1;
+
+		return totalPercentPos;
+	}
+
+	public void setTotalPercentPos(Double totalPercentPos) {
+		this.totalPercentPos = totalPercentPos;
+	}
+
+	public IncomeCompanyTO getLastIncomeCompany() {
+		return lastIncomeCompany;
+	}
+
+	public void setLastIncomeCompany(IncomeCompanyTO lastIncomeCompany) {
+		this.lastIncomeCompany = lastIncomeCompany;
+	}
+
+	public Double getActualDY() {
+		return actualDY;
+	}
+
+	public void setActualDY(Double actualDY) {
+		this.actualDY = actualDY;
+	}
+
+	public Double getBuyDY() {
+		return buyDY;
+	}
+
+	public void setBuyDY(Double buyDY) {
+		this.buyDY = buyDY;
 	}
 
 	@Override

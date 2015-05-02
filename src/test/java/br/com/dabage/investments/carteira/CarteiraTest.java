@@ -1,10 +1,21 @@
 package br.com.dabage.investments.carteira;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +23,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import br.com.dabage.investments.repositories.CarteiraRepository;
+import br.com.dabage.investments.repositories.IncomeRepository;
 import br.com.dabage.investments.repositories.NegotiationRepository;
 
 @ContextConfiguration
@@ -33,7 +45,10 @@ public class CarteiraTest {
 
 	@Autowired
 	PortfolioService portfolioService;
-	
+
+	@Resource
+	IncomeRepository incomeRepository;
+
 	@Test
 	public void testFindByIdCarteiraAndDtNegotiationBetween() {
 		CarteiraTO carteiraTO = carteiraRepository.findAll().get(0);
@@ -46,5 +61,61 @@ public class CarteiraTest {
 		for (NegotiationTO negotiationTO : negs) {
 			System.out.println(negotiationTO);
 		}
+	}
+
+	@Test
+	public void importIncomes() throws IOException {
+	    File myFile = new File("C://fii/FIIP11B.xlsx");
+        FileInputStream fis = new FileInputStream(myFile);
+
+        // Finds the workbook instance for XLSX file
+        XSSFWorkbook myWorkBook = new XSSFWorkbook (fis);
+       
+        // Return first sheet from the XLSX workbook
+        XSSFSheet mySheet = myWorkBook.getSheetAt(0);
+       
+        // Get iterator to all the rows in current sheet
+        Iterator<Row> rowIterator = mySheet.iterator();
+
+        CarteiraTO carteira = carteiraRepository.findAll().get(0);
+
+        // Traversing over each row of XLSX file
+        while (rowIterator.hasNext()) {
+            Row row = rowIterator.next();
+
+            // For each row, iterate through each columns
+            Iterator<Cell> cellIterator = row.cellIterator();
+
+            IncomeTO income = new IncomeTO();
+            income.setAddDate(new Date());
+            income.setIdCarteira(carteira.getId());
+            income.setType(IncomeTypes.INCOME);
+
+            while (cellIterator.hasNext()) {
+
+                Cell cell = cellIterator.next();
+
+                switch (cell.getColumnIndex()) {
+                case 0:
+                    income.setStock(cell.getStringCellValue());
+                    break;
+                case 1:
+                    income.setIncomeDate(cell.getDateCellValue());
+                    break;
+                case 2:
+                	income.setValue(cell.getNumericCellValue());
+                    break;
+                default :
+             
+                }
+            }
+            if (income.getValue() == null) {
+            	continue;
+            }
+            incomeRepository.save(income);
+            carteira.getIncomes().add(income);
+    		carteiraRepository.save(carteira);
+            System.out.println(income);
+        }
 	}
 }

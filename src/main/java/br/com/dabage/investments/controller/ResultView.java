@@ -7,6 +7,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -88,6 +89,36 @@ public class ResultView extends BasicView implements Serializable {
 			}
 			result.addNegotiation(neg);
 		}
+		Collections.sort(results);
+		Iterator<ResultTO> ite = results.iterator();
+
+		if (ite.hasNext()) {
+			ResultTO first = ite.next();
+			first.setResultAmount(first.getResult());
+			if (first.getFee() < 10D) {
+				first.setFeeAmount(first.getFee());
+			} else {
+				first.setFeeAmount(0D);
+			}
+
+			while (ite.hasNext()) {
+				ResultTO thisResult = ite.next();
+				if (first.getResultAmount() < 0) {
+					thisResult.setResultAmount(thisResult.getResult() + first.getResultAmount());
+				} else {
+					thisResult.setResultAmount(thisResult.getResult());
+				}
+
+				thisResult.setFeeAmount(first.getFeeAmount());
+				
+				if (thisResult.getTotalFee() < 10D) {
+					thisResult.setFeeAmount(thisResult.getFee() + thisResult.getFeeAmount());
+				}
+
+				first = thisResult;
+			}
+		}
+
 	}
 
 	/**

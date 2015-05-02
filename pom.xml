@@ -37,12 +37,12 @@
 	    <dependency>
 	        <groupId>org.primefaces.extensions</groupId>
 	        <artifactId>primefaces-extensions</artifactId>
-	        <version>2.1.0</version>
+	        <version>3.0.0</version>
 	    </dependency>
 		<dependency>
 			<groupId>org.primefaces</groupId>
 			<artifactId>primefaces</artifactId>
-			<version>5.1</version>
+			<version>5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.primefaces.themes</groupId>
@@ -181,6 +181,20 @@
 		    <artifactId>spring-test</artifactId>
 		    <version>${spring.version}</version>
 		    <scope>test</scope>
+		</dependency>
+
+		<!-- POI -->
+	 	<dependency>
+	        <groupId>org.apache.poi</groupId>
+	        <artifactId>poi</artifactId>
+	        <version>3.11-beta2</version>
+	        <scope>test</scope>
+	    </dependency>
+		<dependency>
+	        <groupId>org.apache.poi</groupId>
+	        <artifactId>poi-ooxml</artifactId>
+	        <version>3.11-beta2</version>
+	        <scope>test</scope>
 		</dependency>
 	</dependencies>
 	<build>

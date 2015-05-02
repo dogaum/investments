@@ -224,6 +224,12 @@
 		                    			<h:outputText value=" #{msg['app.menu.settings']}" />
 		                    		</h:commandLink>
 		                        </li>
+		                        <li>
+		                    		<h:commandLink action="#{configView.refreshQuoteCache}">
+		                    			<i class="fa fa-fw fa-refresh"></i>
+		                    			<h:outputText value=" #{msg['app.menu.refresh.quote.cache']}" />
+		                    		</h:commandLink>
+		                        </li>
 		                        <li class="divider"></li>
 		                        <li>
 		                            <a href="../j_spring_security_logout"><i class="fa fa-fw fa-power-off"></i>

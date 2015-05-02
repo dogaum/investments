@@ -85,7 +85,43 @@
                             </div>
                             <div class="panel-body">
 						        <p>
-						        	<b><h:outputText value="#{msg['app.portfolio.created']} " /></b> <h:outputText value="#{carteiraView.selectedCarteira.createDate}"><f:convertDateTime locale="#{msg['locale']}"  /></h:outputText>
+						        	<b><h:outputText value="#{msg['app.portfolio.created']} " /></b> <h:outputText value="#{carteiraView.selectedCarteira.createDate}"><f:convertDateTime locale="#{msg['locale']}"  /></h:outputText><br/>
+						        	
+						        	<b><h:outputText value="#{msg['app.portfolio.lastNegotiation']}: " /></b>
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.negotiationType} "/>
+						        	<h:outputText value="#{msg['app.label.from']} " />
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.quantity} "/>
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.stock} "/>
+						        	<h:outputText value="#{msg['app.label.in']} " />
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.dtNegotiation}">
+						        		<f:convertDateTime locale="#{msg['locale']}"  />
+						        	</h:outputText>
+						        	<h:outputText value=" #{msg['app.label.to.2']} " />
+							        <h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.value}">
+							        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+							        </h:outputText>
+
+									<br/>
+
+						        	<b><h:outputText value="#{msg['app.portfolio.lastIncome']}: " /></b>
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.type} "/>
+						        	<h:outputText value=" #{msg['app.label.from']} " />
+							        <h:outputText value="#{carteiraView.selectedCarteira.lastIncome.value}">
+							        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+							        </h:outputText>
+						        	<h:outputText value=" #{msg['app.label.in']} " />
+						        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.incomeDate}">
+						        		<f:convertDateTime locale="#{msg['locale']}"  />
+						        	</h:outputText>
+						        	<h:outputText value=" #{msg['app.label.to']} " />
+									<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.stock}"/>
+
+									<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
+								        <b><h:outputText value="#{msg['app.portfolio.btn.showAll']}" /></b>
+								        <p:inputSwitch value="#{carteiraView.emptyPosition}" onLabel="#{msg['app.label.yes']}" offLabel="#{msg['app.label.no']}">
+								            <p:ajax listener="#{carteiraView.showEmptyPosition}" update="itemTable" />
+								        </p:inputSwitch>
+									</h:panelGrid>
 						        </p>
 
 				                <p:toolbar>
@@ -109,59 +145,89 @@
 							            <p:rowToggler />
 							        </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.symbol']}" sortBy="#{item.stock}" style="text-align:center" width="90">
+								    <p:column headerText="#{msg['app.portfolio.symbol']}" sortBy="#{item.stock}" style="text-align:center">
 								        <h:outputText value="#{item.stock}" />
 								    </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.qty']}" style="text-align:right" width="100">
+								    <p:column headerText="#{msg['app.portfolio.qty']}" style="text-align:right">
 								        <h:outputText value="#{item.quantity}" />
 								    </p:column>
 								 
-								    <p:column headerText="#{msg['app.portfolio.avgValue']}" style="text-align:right" width="110">
+								    <p:column headerText="#{msg['app.portfolio.avgValue']}" style="text-align:right">
 								        <h:outputText value="#{item.avgValue}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.actualValue']}" style="text-align:right" width="110">
+								    <p:column headerText="#{msg['app.portfolio.actualValue']}" style="text-align:right">
 								        <h:outputText value="#{item.actualValue}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.actavgValue']}" sortBy="#{item.percentActAvgValue}" style="text-align:right" width="110">
+								    <p:column headerText="#{msg['app.portfolio.lastIncome.s']}" style="text-align:right">
+								        <h:outputText value="#{item.lastIncomeCompany.value}" title="#{msg['app.portfolio.lastIncome']}">
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.dy.am.c']}" sortBy="#{item.buyDY}" style="text-align:right">
+								        <h:outputText value="#{item.buyDY}">
+								        	<f:convertNumber type="percent" minFractionDigits="2"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.dy.am.a']}" sortBy="#{item.actualDY}" style="text-align:right">
+								        <h:outputText value="#{item.actualDY}" title="#{item.actualDY * 12 * 100} %">
+								        	<f:convertNumber type="percent" minFractionDigits="2"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.actavgValue']}" sortBy="#{item.percentActAvgValue}" style="text-align:right">
 								        <h:outputText value="#{item.percentActAvgValue}">
+								        	<f:convertNumber type="percent" minFractionDigits="2"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.aloc']}" sortBy="#{item.totalValue / carteiraView.selectedCarteira.totalPortfolio}" style="text-align:right">
+								        <h:outputText value="#{item.totalValue / carteiraView.selectedCarteira.totalPortfolio}">
 								        	<f:convertNumber type="percent" minFractionDigits="2"/>
 								        </h:outputText>
 								    </p:column>
 
 								    <p:column headerText="#{msg['app.portfolio.totalAcquisition']}" sortBy="#{item.totalValue}" style="text-align:right">
 								        <h:outputText value="#{item.totalValue}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
 								    <p:column headerText="#{msg['app.portfolio.totalIncome']}" sortBy="#{item.totalIncomeValue}" style="text-align:right">
 								        <h:outputText value="#{item.totalIncomeValue}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
-								        </h:outputText>
-								    </p:column>
-
-								    <p:column headerText="#{msg['app.portfolio.totalActual']}" sortBy="#{item.totalActual}" style="text-align:right">
-								        <h:outputText value="#{item.totalActual}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
 								    <p:column headerText="#{msg['app.portfolio.resultValue']}" style="text-align:right">
 								        <h:outputText value="#{item.totalCalculateResult}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
 								        </h:outputText>
 								    </p:column>
 
-								    <p:column headerText="#{msg['app.portfolio.totalPlusIncome']}" style="text-align:right">
-								        <h:outputText value="#{item.totalPlusIncome}">
-								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								    <p:column headerText="#{msg['app.portfolio.resultPlusIncome']}" style="text-align:right">
+								        <h:outputText value="#{item.resultPlusIncome}">
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.totalActual']}" sortBy="#{item.totalActual}" style="text-align:right">
+								        <h:outputText value="#{item.totalActual}">
+								        	<f:convertNumber type="number" currencySymbol="#{msg['currencySymbol']}" minFractionDigits="2" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.portfolio.percent.pos']}" sortBy="#{item.totalPercentPos}" style="text-align:right">
+								        <h:outputText value="#{item.totalPercentPos}">
+								        	<f:convertNumber type="percent" minFractionDigits="2"/>
 								        </h:outputText>
 								    </p:column>
 							        <p:rowExpansion>
@@ -245,42 +311,63 @@
         							</p:rowExpansion>
 									<p:columnGroup type="footer">
 							            <p:row>
-							                <p:column colspan="6" style="text-align:right" footerText="Total da carteira:" />
+							                <p:column colspan="8" style="text-align:right" footerText="Total da carteira:" />
+										    <p:column style="text-align:right">
+											    <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.selectedCarteira.percentTotalActual}">
+											        	<f:convertNumber type="percent" minFractionDigits="2"/>
+											        </h:outputText>
+											    </f:facet>
+										    </p:column>
+										    <p:column style="text-align:right">
+											    <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalPortfolio / carteiraView.selectedCarteira.totalPortfolio}">
+											        	<f:convertNumber type="percent" minFractionDigits="2"/>
+											        </h:outputText>
+											    </f:facet>
+										    </p:column>
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
-											        <h:outputText value="#{carteiraView.totalPortfolio}">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalPortfolio}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
 							                </p:column>
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
-											        <h:outputText value="#{carteiraView.totalPortfolioIncome}">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalPortfolioIncome}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
 							                </p:column>
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
-											        <h:outputText value="#{carteiraView.totalPortfolioActual}">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalCalculateResult}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
 							                </p:column>
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
-											        <h:outputText value="#{carteiraView.totalCalculateResult}">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalPortfolioActualPlusIncome}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
 							                </p:column>
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
-											        <h:outputText value="#{carteiraView.totalPortfolioActualPlusIncome}">
+											        <h:outputText value="#{carteiraView.selectedCarteira.totalPortfolioActual}">
 											        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
 											        </h:outputText>
 									            </f:facet>
 							                </p:column>
+										    <p:column style="text-align:right" width="90">
+											    <f:facet name="footer">
+											        <h:outputText value="#{carteiraView.selectedCarteira.percentTotalPos}">
+											        	<f:convertNumber type="percent" minFractionDigits="2"/>
+											        </h:outputText>
+											    </f:facet>
+										    </p:column>
 							            </p:row>
 							        </p:columnGroup>
 								</p:dataTable>
@@ -376,6 +463,17 @@
 						</p:panel>
 			        </p:dialog>
                 </div>
+
+            </div>
+            <div class="row">
+            	<div class="col-lg-12">
+					<p:chart type="pie" model="#{carteiraView.pieModelPre}" style="width:800px;height:600px"/>
+            	</div>
+            </div>
+            <div class="row">
+            	<div class="col-lg-12">
+					<p:chart type="pie" model="#{carteiraView.pieModelPos}" style="width:800px;height:600px" />
+            	</div>
             </div>
     </ui:define>
 </ui:composition>

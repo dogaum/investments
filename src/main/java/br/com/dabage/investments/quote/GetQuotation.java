@@ -7,8 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -27,8 +29,11 @@ public class GetQuotation {
 	static SimpleDateFormat unFormatCompleteDate = new SimpleDateFormat("yyyy-MM-dd");
 	static NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);
 	static NumberFormat unFormatNumber = NumberFormat.getInstance();
+
+	static Map<String, Quote> quoteCache;
+
 	public String getLastQuotation(String stock) {
-		
+	
 		try {
 			Document doc = Jsoup.connect(cmaQuoteUrl + stock).get();
 			String[] lines = doc.body().text().split(" ");
@@ -83,7 +88,61 @@ public class GetQuotation {
 
 		return 0D;
 	}
-	
+
+	public Double getLastQuoteCache(String stock) {
+		if (quoteCache == null) {
+			quoteCache = new HashMap<String, Quote>();
+		}
+
+		Quote quote = null;
+
+		if (quoteCache.containsKey(stock)) {
+			quote = quoteCache.get(stock);
+		}
+
+		if (quote == null || (quote.getLastUpdate().getTime() + 15*60*1000) < new Date().getTime()) {
+			try {
+				Document doc = Jsoup.connect(cmaQuoteUrl + stock).get();
+				String[] lines = doc.body().text().split(" ");
+				if (lines.length < 2) {
+					return 0D;
+				}
+				String lastLine = lines[lines.length - 1];
+				String[] lineValues = lastLine.split(",");
+
+				Date date = preFormatDate.parse(lineValues[0]); //Date;
+				quote = new Quote();
+				quote.setDate(date);
+				quote.setLastUpdate(new Date());
+
+				quote.setOpen(Double.valueOf(lineValues[1])); //Opean value
+				quote.setLow(Double.valueOf(lineValues[3])); //Min value
+				quote.setHigh(Double.valueOf(lineValues[2])); //Max value
+				quote.setClose(Double.valueOf(lineValues[4])); //Last value 
+				quote.setStock(stock);
+
+				quoteCache.put(stock, quote);
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}			
+		}
+
+		if (quote == null) {
+			return 0D;
+		} else {
+			return quote.getClose();
+		}
+	}
+
+	/**
+	 * Refresh the Quote Cache
+	 */
+	public void refreshQuoteCache() {
+		quoteCache = new HashMap<String, Quote>();
+	}
+
 	public JSONObject getJsonData(String stock) {
 
 		try {

@@ -20,6 +20,8 @@ public class Quote implements Serializable {
 
 	private Date date;
 
+	private Date lastUpdate;
+
 	public String getStock() {
 		return stock;
 	}
@@ -66,6 +68,14 @@ public class Quote implements Serializable {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
 	}
 
 }

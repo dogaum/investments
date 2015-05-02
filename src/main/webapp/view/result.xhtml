@@ -167,6 +167,18 @@
 								        </h:outputText>
 								    </p:column>
 
+								    <p:column headerText="#{msg['app.result.resultAmount']}" style="text-align:right" width="110">
+								        <h:outputText value="#{result.resultAmount}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
+								    <p:column headerText="#{msg['app.result.feeAmount']}" style="text-align:right" width="110">
+								        <h:outputText value="#{result.feeAmount}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+								    </p:column>
+
 								    <p:column headerText="#{msg['app.result.fee']}" style="text-align:right" width="110">
 								        <h:outputText value="#{result.totalFee}">
 								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
@@ -181,7 +193,7 @@
 
 									<p:columnGroup type="footer">
 							            <p:row>
-							                <p:column colspan="4" style="text-align:right" footerText="Total computado:" />
+							                <p:column colspan="6" style="text-align:right" footerText="Total computado:" />
 							                <p:column style="text-align:right">
 									            <f:facet name="footer">
 											        <h:outputText value="#{resultView.totalPortfolioResult}">
