@@ -52,7 +52,7 @@ public class UserTest {
 	public void testAddRole() {
 		RoleTO roleAdmin = new RoleTO();
 		roleAdmin.setName("ROLE_USUARIO");
-		roleAdmin.setDescription("Usuário normal do sistema");
+		roleAdmin.setDescription("Usuario normal do sistema");
 		//roleRepository.save(roleAdmin);
 	}
 	
