@@ -30,7 +30,7 @@ public class InsertTickers {
 	public void run() {
 			String uolTickers = "http://cotacoes.economia.uol.com.br/acoes-bovespa.html?exchangeCode=.BVSP&page=1&size=2000";
 			boolean first = true;
-			StockTypeTO stockType = stockTypeRepository.findByName("AÇÕES");
+			StockTypeTO stockType = stockTypeRepository.findByName("ACOES");
 			try {
 				Document doc = Jsoup.connect(uolTickers).get();
 				Element pagina = doc.getElementById("resultado-busca");

@@ -196,7 +196,7 @@ public class CheckNews {
 		String ticker = company.getTicker();
 		Double lastQuote = getQuotation.getLastQuote(ticker);
 		if (lastQuote != null) {
-			result.append("Último negócio:\n");
+			result.append("Ultimo negocio:\n");
 			result.append(ticker);
 			result.append(" : ");
 			result.append("R$ " + numberFormat.format(lastQuote));

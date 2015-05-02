@@ -183,7 +183,7 @@ public class NegotiationTO extends AbstractDocument implements Comparable<Negoti
 
 	@Override
 	public String toString() {
-		return "Movimentação [Carteira id: " + idCarteira + " Código: " + stock + " Valor: " + value
+		return "Movimentacao [Carteira id: " + idCarteira + " Codigo: " + stock + " Valor: " + value
 				+ " Data: " + dtNegotiation + " Qtde: " + quantity
 				+ " Tipo: " + negotiationType + " Custos: " + costs
 				+ "]";

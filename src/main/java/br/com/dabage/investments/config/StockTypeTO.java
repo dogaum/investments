@@ -19,19 +19,19 @@ public class StockTypeTO extends AbstractDocument {
 	@Indexed
 	private String name;
 
-	/** Tributação em % para operações normais. */
+	/** Tributacao em % para operacoes normais. */
 	private Double irNormal;
 
-	/** Tributação em % para operações em Daytrade. */
+	/** Tributacao em % para operacoes em Daytrade. */
 	private Double irDayTrade;
 
-	/** Limite de isenção quando possível. */
+	/** Limite de isencao quando possivel. */
 	private Double exempt;
 
-	/** Data de criação do item; */
+	/** Data de criacao do item; */
 	private Date addDate;
 
-	/** Data de remoção do item. */
+	/** Data de remocao do item. */
 	private Date removeDate;
 
 	public String getName() {

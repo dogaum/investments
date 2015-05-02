@@ -217,7 +217,7 @@ public class ConfigView extends BasicView implements Serializable {
 	 */
 	private boolean checkUser(UserTO user) {
 		if (user == null) {
-			addWarnMessage("Valores inválidos.");
+			addWarnMessage("Valores invalidos.");
 			return false;
 		}
 
@@ -248,12 +248,12 @@ public class ConfigView extends BasicView implements Serializable {
 		}
 
 		if (!user.getPassword().equals(user.getRetypePassword())) {
-			addWarnMessage("As senhas informadas não conferem.");
+			addWarnMessage("As senhas informadas nao conferem.");
 			return false;
 		}
 		
 		if (roles.getTarget().isEmpty()) {
-			addWarnMessage("Adicione um perfil de acesso ao novo usuário.");
+			addWarnMessage("Adicione um perfil de acesso ao novo usuario.");
 			return false;
 		}
 		

@@ -346,12 +346,12 @@ public class CarteiraView extends BasicView implements Serializable {
 		neg.setStock(neg.getStock().toUpperCase());
 
 		if (neg.getStock().length() < 5) {
-			addWarnMessage("Código inválido: " + neg.getStock());
+			addWarnMessage("Codigo invalido: " + neg.getStock());
 			return false;
 		} else {
 			CompanyTO company = companyRepository.findByTicker(neg.getStock());
 			if (company == null) {
-				addWarnMessage("Código inválido: " + neg.getStock());
+				addWarnMessage("Codigo invalido: " + neg.getStock());
 				return false;
 			}
 			neg.setStockType(company.getStockType());

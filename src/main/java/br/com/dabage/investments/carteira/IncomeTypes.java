@@ -12,7 +12,7 @@ public final class IncomeTypes {
 
 	public static final String INCOME = "Renda";
 
-	public static final String AMORTIZATION = "Amortização";
+	public static final String AMORTIZATION = "Amortizacao";
 
 	public static final List<SelectItem> incomeTypes() {
 		List<SelectItem> result = new ArrayList<SelectItem>();
