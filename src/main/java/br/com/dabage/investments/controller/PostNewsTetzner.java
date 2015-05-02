@@ -15,7 +15,7 @@ public class PostNewsTetzner {
 		map.add("highlander_comment_nonce", "96554302fb");
 		map.add("_wp_http_referer", "/");
 		map.add("hc_post_as", "guest");
-		map.add("comment", "Final de maio e ainda não sairam todos os relatórios. \nEsses estagiários estão mesmo de sacanagem.");
+		map.add("comment", "Final de maio e ainda nao sairam todos os relatorios. \nEsses estagiarios estão mesmo de sacanagem.");
 		map.add("email", "dogaum@gmail.com");
 		map.add("author", "Douglas Araujo");
 		map.add("comment_post_ID", "672");

@@ -230,14 +230,14 @@ public class CarteiraView extends BasicView implements Serializable {
 				pieModelPos.set(item.getStock(), item.getTotalActual());
 			}
 		}
-        pieModelPre.setTitle("Alocação de Compra");
+        pieModelPre.setTitle("Alocacao de Compra");
         pieModelPre.setLegendPosition("w");
         pieModelPre.setFill(true);
         pieModelPre.setShowDataLabels(true);
         pieModelPre.setDiameter(450);
         pieModelPre.setLegendCols(2);
 
-        pieModelPos.setTitle("Alocação preço atual");
+        pieModelPos.setTitle("Alocacao preco atual");
         pieModelPos.setLegendPosition("e");
         pieModelPos.setFill(true);
         pieModelPos.setShowDataLabels(true);
@@ -377,7 +377,7 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	public void addIncome(ActionEvent event) {
 		if (income.getStock().isEmpty()) {
-			addWarnMessage("Infome o código da Ação/Fundo.");
+			addWarnMessage("Infome o codigo da Acao/Fundo.");
 			return;
 		}
 
