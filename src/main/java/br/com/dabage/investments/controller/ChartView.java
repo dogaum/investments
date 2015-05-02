@@ -62,7 +62,7 @@ public class ChartView extends BasicView implements Serializable {
 
 		List<Quote> quotes = getQuotation.getQuoteHist(stock);
 		if (quotes == null || quotes.isEmpty()) {
-			addInfoMessage("Codigo não encontrado: " + stock.toUpperCase());
+			addInfoMessage("Codigo nao encontrado: " + stock.toUpperCase());
 		}
 
 		for (Quote quote : quotes) {

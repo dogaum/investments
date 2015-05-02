@@ -110,7 +110,7 @@ public class ConfigView extends BasicView implements Serializable {
 	 */
 	private boolean checkStockType(StockTypeTO stock) {
 		if (stock == null) {
-			addWarnMessage("Valores inválidos.");
+			addWarnMessage("Valores invalidos.");
 			return false;
 		}
 

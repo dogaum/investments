@@ -398,7 +398,7 @@ public class CarteiraView extends BasicView implements Serializable {
 		selectedCarteira.getIncomes().add(income);
 		carteiraRepository.save(selectedCarteira);
 
-		//TODO se for amortization, subtrair do valor médio de aquisição
+		//TODO se for amortization, subtrair do valor medio de aquisicao
 		
 		income = new IncomeTO();
 		this.selectCarteira();
