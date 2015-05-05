@@ -140,9 +140,18 @@
 									    </p:commandLink>				                		
 				                	</f:facet>
 				                </p:toolbar>
-								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}" emptyMessage="#{msg['pf.datatable.noresults']}">
+
+								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}" emptyMessage="#{msg['pf.datatable.noresults']}"
+										 	reflow="true">
+
 									<p:column style="width:38px">
 							            <p:rowToggler />
+							        </p:column>
+
+							        <p:column style="width:50px;text-align: center">
+							             <p:commandButton update=":form:incomeDetail" oncomplete="PF('incomeDialog').show()" icon="ui-icon-search" title="#{msg['app.portfolio.incomes.header']}">
+							                <f:setPropertyActionListener value="#{item}" target="#{carteiraView.selectedCarteiraItem}" />
+							            </p:commandButton>
 							        </p:column>
 
 								    <p:column headerText="#{msg['app.portfolio.symbol']}" sortBy="#{item.stock}" style="text-align:center">
@@ -462,6 +471,60 @@
 			                </p:toolbar>
 						</p:panel>
 			        </p:dialog>
+
+					<!-- Income Detail -->
+				    <p:dialog widgetVar="incomeDialog" modal="true" position="center" header="#{msg['app.portfolio.incomes.header']}" width="60%" showEffect="fade" hideEffect="fade" resizable="true" draggable="true" closeOnEscape="true">
+				        <p:outputPanel id="incomeDetail" style="text-align:center;" rendered="#{not empty carteiraView.selectedCarteiraItem}">
+							<p:dataTable widgetVar="incItemTable" var="incItem" value="#{carteiraView.selectedCarteiraItem.incomes}" style="margin-left:27px" rowKey="#{incItem.id}"
+										 editable="true" paginator="true" rows="10" rowsPerPageTemplate="10,20" reflow="true"
+                         				 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+								<p:ajax event="rowEdit" listener="#{carteiraView.editIncome}" update=":form:portfolioDetail" />
+
+							    <p:column headerText="#{msg['app.portfolio.symbol']}" sortBy="#{incItem.stock}">
+							        <h:outputText value="#{incItem.stock}" />
+							    </p:column>
+
+								<p:column headerText="#{msg['app.portfolio.income.date']}" sortBy="#{incItem.incomeDate}">
+							        <h:outputText value="#{incItem.incomeDate}">
+							        	<f:convertDateTime locale="#{msg['locale']}"  />
+							        </h:outputText>
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.portfolio.type']}" sortBy="#{incItem.type}">
+						           <p:cellEditor>
+						               <f:facet name="output"><h:outputText value="#{incItem.type}" /></f:facet>
+						               <f:facet name="input">
+									       <p:selectOneMenu id="negType" value="#{incItem.type}" style="width:100%">
+					            		   		<f:selectItems value="#{carteiraView.incomeTypes}" />
+									       </p:selectOneMenu>
+						               </f:facet>
+						            </p:cellEditor>
+							    </p:column>
+
+							    <p:column headerText="#{msg['app.portfolio.value']}" sortBy="#{incItem.value}">
+						           <p:cellEditor>
+						               <f:facet name="output">
+									        <h:outputText value="#{incItem.value}">
+									        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+									        </h:outputText>
+						               </f:facet>
+						               <f:facet name="input"><pe:inputNumber value="#{incItem.value}"  symbol="#{msg['currencySymbol']} "/></f:facet>
+						            </p:cellEditor>
+							    </p:column>
+
+							    <p:column style="width:38px">
+							        <p:rowEditor />
+							    </p:column>
+							    <p:column style="width:50px; text-align: center">
+							        <p:commandButton icon="ui-icon-close" action="#{carteiraView.deleteIncome}" update=":form:portfolioDetail" id="cbDeleteIncome">
+							        	<p:confirm header="#{msg['app.label.confirm']}" message="#{msg['app.portfolio.delete.dlg.msg']}" icon="ui-icon-alert" />
+							        	<f:setPropertyActionListener value="#{incItem}" target="#{carteiraView.income}" for="cbDeleteIncome"/>
+							        </p:commandButton>
+							    </p:column>
+							</p:dataTable>
+				        </p:outputPanel>
+				    </p:dialog>
                 </div>
 
             </div>

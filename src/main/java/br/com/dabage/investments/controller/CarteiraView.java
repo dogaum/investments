@@ -48,6 +48,8 @@ public class CarteiraView extends BasicView implements Serializable {
 	private CarteiraTO selectedCarteira;
 	private List<CarteiraItemTO> carteiraItens;
 
+	private CarteiraItemTO selectedCarteiraItem;
+	
 	private String newName;
 
 	private NegotiationTO negotiation;
@@ -323,6 +325,14 @@ public class CarteiraView extends BasicView implements Serializable {
 		this.selectCarteira();
 	}
 
+	public void editIncome(RowEditEvent event) {
+
+		IncomeTO inc = (IncomeTO) event.getObject();
+
+		incomeRepository.save(inc);
+		this.selectCarteira();
+	}
+	
 	/**
 	 * Validates a Negotiation insert/update
 	 * @param neg
@@ -367,6 +377,13 @@ public class CarteiraView extends BasicView implements Serializable {
 		selectCarteira();
 	}
 
+	public void deleteIncome() {
+		incomeRepository.delete(income);
+		selectedCarteira.getIncomes().remove(income);
+		carteiraRepository.save(selectedCarteira);
+		selectCarteira();
+	}
+	
 	/**
 	 * Prepare a Income to be add
 	 * @param event
@@ -493,6 +510,14 @@ public class CarteiraView extends BasicView implements Serializable {
 
 	public void setEmptyPosition(boolean emptyPosition) {
 		this.emptyPosition = emptyPosition;
+	}
+
+	public CarteiraItemTO getSelectedCarteiraItem() {
+		return selectedCarteiraItem;
+	}
+
+	public void setSelectedCarteiraItem(CarteiraItemTO selectedCarteiraItem) {
+		this.selectedCarteiraItem = selectedCarteiraItem;
 	}
 
 }
