@@ -149,8 +149,8 @@
 							        </p:column>
 
 							        <p:column style="width:50px;text-align: center">
-							             <p:commandButton update=":form:incomeDetail" oncomplete="PF('incomeDialog').show()" icon="ui-icon-search" title="#{msg['app.portfolio.incomes.header']}">
-							                <f:setPropertyActionListener value="#{item}" target="#{carteiraView.selectedCarteiraItem}" />
+							             <p:commandButton update=":form:incomeDetail" immediate="true" oncomplete="PF('incomeDialog').show()" icon="ui-icon-search" title="#{msg['app.portfolio.incomes.header']}">
+							                <f:setPropertyActionListener value="#{item}" target="#{carteiraView.selectedCarteiraItem}"/>
 							            </p:commandButton>
 							        </p:column>
 
@@ -320,7 +320,7 @@
         							</p:rowExpansion>
 									<p:columnGroup type="footer">
 							            <p:row>
-							                <p:column colspan="8" style="text-align:right" footerText="Total da carteira:" />
+							                <p:column colspan="9" style="text-align:right" footerText="#{msg['app.portfolio.total']}:" />
 										    <p:column style="text-align:right">
 											    <f:facet name="footer">
 											        <h:outputText value="#{carteiraView.selectedCarteira.percentTotalActual}">
@@ -474,9 +474,9 @@
 
 					<!-- Income Detail -->
 				    <p:dialog widgetVar="incomeDialog" modal="true" position="center" header="#{msg['app.portfolio.incomes.header']}" width="60%" showEffect="fade" hideEffect="fade" resizable="true" draggable="true" closeOnEscape="true">
-				        <p:outputPanel id="incomeDetail" style="text-align:center;" rendered="#{not empty carteiraView.selectedCarteiraItem}">
+				        <p:panel id="incomeDetail" style="text-align:center;" rendered="#{not empty carteiraView.selectedCarteiraItem}">
 							<p:dataTable widgetVar="incItemTable" var="incItem" value="#{carteiraView.selectedCarteiraItem.incomes}" style="margin-left:27px" rowKey="#{incItem.id}"
-										 editable="true" paginator="true" rows="10" rowsPerPageTemplate="10,20" reflow="true"
+										 editable="true" paginator="true" rows="10" rowsPerPageTemplate="10,20" reflow="true" sortBy="#{incItem.stock}"
                          				 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
 
 								<p:ajax event="rowEdit" listener="#{carteiraView.editIncome}" update=":form:portfolioDetail" />
@@ -522,8 +522,21 @@
 							        	<f:setPropertyActionListener value="#{incItem}" target="#{carteiraView.income}" for="cbDeleteIncome"/>
 							        </p:commandButton>
 							    </p:column>
+
+						        <p:summaryRow>
+						            <p:column colspan="3" style="text-align:right">
+						                <h:outputText value="#{msg['app.portfolio.incomes.total']}" />
+						            </p:column>
+						            <p:column>
+						                <h:outputText value="#{carteiraView.selectedCarteiraItemTotalValue}">
+						                    <f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+						                </h:outputText>
+						            </p:column>
+						            <p:column colspan="2">
+						            </p:column>
+						        </p:summaryRow>
 							</p:dataTable>
-				        </p:outputPanel>
+				        </p:panel>
 				    </p:dialog>
                 </div>
 

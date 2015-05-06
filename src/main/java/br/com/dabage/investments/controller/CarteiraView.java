@@ -49,7 +49,8 @@ public class CarteiraView extends BasicView implements Serializable {
 	private List<CarteiraItemTO> carteiraItens;
 
 	private CarteiraItemTO selectedCarteiraItem;
-	
+	private Double selectedCarteiraItemTotalValue;
+
 	private String newName;
 
 	private NegotiationTO negotiation;
@@ -101,6 +102,7 @@ public class CarteiraView extends BasicView implements Serializable {
 			firstCarteiraRing = 0;
 			selectedCarteira = carteiras.get(firstCarteiraRing);
 			selectCarteira();
+			selectedCarteiraItemTotalValue = 0D;
 			showEmptyPosition();
 		}
 		return "carteiras";
@@ -517,7 +519,22 @@ public class CarteiraView extends BasicView implements Serializable {
 	}
 
 	public void setSelectedCarteiraItem(CarteiraItemTO selectedCarteiraItem) {
+		if (selectedCarteiraItem.getIncomes() != null) {
+			selectedCarteiraItemTotalValue = 0D;
+			for (IncomeTO income : selectedCarteiraItem.getIncomes()) {
+				selectedCarteiraItemTotalValue += income.getValue();
+			}
+		}
 		this.selectedCarteiraItem = selectedCarteiraItem;
+	}
+
+	public Double getSelectedCarteiraItemTotalValue() {
+		return selectedCarteiraItemTotalValue;
+	}
+
+	public void setSelectedCarteiraItemTotalValue(
+			Double selectedCarteiraItemTotalValue) {
+		this.selectedCarteiraItemTotalValue = selectedCarteiraItemTotalValue;
 	}
 
 }
