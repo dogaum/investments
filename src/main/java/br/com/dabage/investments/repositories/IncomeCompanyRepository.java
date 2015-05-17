@@ -21,4 +21,6 @@ public interface IncomeCompanyRepository extends MongoRepository<IncomeCompanyTO
 	IncomeCompanyTO findTopByStockOrderByIncomeDateDesc(String stock);
 	
 	IncomeCompanyTO findByStockAndYearMonth(String stock, Integer YearMonth);
+
+	List<IncomeCompanyTO> findByYearMonth(Integer YearMonth);
 }

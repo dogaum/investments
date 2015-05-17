@@ -1,6 +1,7 @@
 package br.com.dabage.investments.company;
 
 import java.math.BigInteger;
+import java.util.Comparator;
 import java.util.Date;
 
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -71,8 +72,55 @@ public class IncomeCompanyTO extends AbstractDocument implements Comparable<Inco
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((stock == null) ? 0 : stock.hashCode());
+		result = prime * result + ((value == null) ? 0 : value.hashCode());
+		result = prime * result
+				+ ((yearMonth == null) ? 0 : yearMonth.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		IncomeCompanyTO other = (IncomeCompanyTO) obj;
+		if (stock == null) {
+			if (other.stock != null)
+				return false;
+		} else if (!stock.equals(other.stock))
+			return false;
+		if (value == null) {
+			if (other.value != null)
+				return false;
+		} else if (!value.equals(other.value))
+			return false;
+		if (yearMonth == null) {
+			if (other.yearMonth != null)
+				return false;
+		} else if (!yearMonth.equals(other.yearMonth))
+			return false;
+		return true;
+	}
+
+	@Override
 	public int compareTo(IncomeCompanyTO o) {
 		return this.incomeDate.compareTo(o.getIncomeDate());
 	}
 
+	public static Comparator<IncomeCompanyTO> IncomeDateDesc = new Comparator<IncomeCompanyTO>() {
+
+		public int compare(IncomeCompanyTO inc1, IncomeCompanyTO inc2) {
+
+			// ascending order
+			return inc2.getIncomeDate().compareTo(inc1.getIncomeDate());
+		}
+
+	};
 }

@@ -86,35 +86,36 @@
                             <div class="panel-body">
 						        <p>
 						        	<b><h:outputText value="#{msg['app.portfolio.created']} " /></b> <h:outputText value="#{carteiraView.selectedCarteira.createDate}"><f:convertDateTime locale="#{msg['locale']}"  /></h:outputText><br/>
-						        	
-						        	<b><h:outputText value="#{msg['app.portfolio.lastNegotiation']}: " /></b>
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.negotiationType} "/>
-						        	<h:outputText value="#{msg['app.label.from']} " />
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.quantity} "/>
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.stock} "/>
-						        	<h:outputText value="#{msg['app.label.in']} " />
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.dtNegotiation}">
-						        		<f:convertDateTime locale="#{msg['locale']}"  />
-						        	</h:outputText>
-						        	<h:outputText value=" #{msg['app.label.to.2']} " />
-							        <h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.value}">
-							        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
-							        </h:outputText>
-
-									<br/>
-
-						        	<b><h:outputText value="#{msg['app.portfolio.lastIncome']}: " /></b>
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.type} "/>
-						        	<h:outputText value=" #{msg['app.label.from']} " />
-							        <h:outputText value="#{carteiraView.selectedCarteira.lastIncome.value}">
-							        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
-							        </h:outputText>
-						        	<h:outputText value=" #{msg['app.label.in']} " />
-						        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.incomeDate}">
-						        		<f:convertDateTime locale="#{msg['locale']}"  />
-						        	</h:outputText>
-						        	<h:outputText value=" #{msg['app.label.to']} " />
-									<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.stock}"/>
+						        	<p:panel rendered="#{not empty carteiraView.selectedCarteira.lastNegotiation}">
+							        	<b><h:outputText value="#{msg['app.portfolio.lastNegotiation']}: " /></b>
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.negotiationType} "/>
+							        	<h:outputText value="#{msg['app.label.from']} " />
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.quantity} "/>
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.stock} "/>
+							        	<h:outputText value="#{msg['app.label.in']} " />
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.dtNegotiation}">
+							        		<f:convertDateTime locale="#{msg['locale']}"  />
+							        	</h:outputText>
+							        	<h:outputText value=" #{msg['app.label.to.2']} " />
+								        <h:outputText value="#{carteiraView.selectedCarteira.lastNegotiation.value}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+	
+										<br/>
+	
+							        	<b><h:outputText value="#{msg['app.portfolio.lastIncome']}: " /></b>
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.type} "/>
+							        	<h:outputText value=" #{msg['app.label.from']} " />
+								        <h:outputText value="#{carteiraView.selectedCarteira.lastIncome.value}">
+								        	<f:convertNumber type="currency" currencySymbol="#{msg['currencySymbol']}" maxFractionDigits="2" locale="#{msg['locale']}"/>
+								        </h:outputText>
+							        	<h:outputText value=" #{msg['app.label.in']} " />
+							        	<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.incomeDate}">
+							        		<f:convertDateTime locale="#{msg['locale']}"  />
+							        	</h:outputText>
+							        	<h:outputText value=" #{msg['app.label.to']} " />
+										<h:outputText value="#{carteiraView.selectedCarteira.lastIncome.stock}"/>
+						        	</p:panel>
 
 									<h:panelGrid columns="2" style="margin-bottom:10px" cellpadding="5">
 								        <b><h:outputText value="#{msg['app.portfolio.btn.showAll']}" /></b>
@@ -543,12 +544,12 @@
             </div>
             <div class="row">
             	<div class="col-lg-12">
-					<p:chart type="pie" model="#{carteiraView.pieModelPre}" style="width:800px;height:600px"/>
+					<p:chart type="pie" model="#{carteiraView.pieModelPre}" rendered="#{not empty carteiraView.pieModelPre}" style="width:800px;height:600px"/>
             	</div>
             </div>
             <div class="row">
             	<div class="col-lg-12">
-					<p:chart type="pie" model="#{carteiraView.pieModelPos}" style="width:800px;height:600px" />
+					<p:chart type="pie" model="#{carteiraView.pieModelPos}" rendered="#{not empty carteiraView.pieModelPos}" style="width:800px;height:600px" />
             	</div>
             </div>
     </ui:define>

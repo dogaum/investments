@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>  
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"  
+    xmlns:h="http://java.sun.com/jsf/html"  
+    xmlns:f="http://java.sun.com/jsf/core"  
+    xmlns:ui="http://java.sun.com/jsf/facelets"  
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:pe="http://primefaces.org/ui/extensions"  
+    template="../template/template.xhtml">
+
+    <ui:define name="title">
+    	<h:outputText value="#{msg['app.incomes.title']}"/>
+    </ui:define>
+	<ui:define name="body">
+	    	<style type="text/css">
+		    	.panel-heading a:after {
+		    	    font-family: 'Glyphicons Halflings';
+		    	    content: "\e114";    
+		    	    float: right; 
+		    	    color: #fff;
+		    	}
+		    	.panel-heading a.collapsed:after {
+		    	    content: "\e080";
+		    	}
+		    	.ui-toolbar.ui-widget-header {
+				  background-image: none;
+				  color: #fff;
+				  background-color: #428bca;
+		    	}
+	
+				.panel-green .panel-heading a {
+				    font-weight: bold;
+				    color: #fff;
+				}
+
+				.ui-panelgrid td, .ui-panelgrid tr
+				{
+				    border-style: none !important
+				}
+
+				.ui-datatable .ui-datatable-data .ui-datatable-odd td{    
+				    background-color: #FFFFFF;  
+				}  
+				  
+				.ui-datatable .ui-datatable-data .ui-datatable-even td{    
+				    background-color: #F2F5F9;  
+				}
+	    	</style>
+
+            <!-- Page Heading -->
+            <div class="row" id="divSubtitle">
+                <div class="col-lg-12">
+                    <ol class="breadcrumb">
+                        <li class="active">
+                            <i class="fa fa-fw fa-line-chart"></i> <h:outputText value=" #{msg['app.incomes.title']}"/>
+                        </li>
+                    </ol>
+                </div>
+                <div class="col-lg-12">
+					<p:dataTable id="itemTable" var="income" value="#{incomeView.incomes}" emptyMessage="#{msg['pf.datatable.noresults']}"
+								 rowStyleClass="">
+					    <p:column headerText="#{msg['app.incomes.stock']}" style="text-align:center" width="70">
+					        <h:outputText value="#{income.stock}"/>
+					    </p:column>
+
+					    <p:column headerText="#{msg['app.incomes.avg24']}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.avg24}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{msg['app.incomes.avg12']}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.avg12}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+
+					    <p:column headerText="#{incomeView.incomeLabel.lbl12}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value12}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl11}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value11}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl10}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value10}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl9}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value9}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl8}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value8}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl7}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value7}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl6}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value6}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl5}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value5}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl4}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value4}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl3}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value3}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl2}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value2}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					    <p:column headerText="#{incomeView.incomeLabel.lbl1}" style="text-align:center" width="80">
+					        <h:outputText value="#{income.value1}">
+					        	<f:convertNumber type="number" minFractionDigits="2" maxFractionDigits="6" locale="#{msg['locale']}"/>
+					        </h:outputText>
+					    </p:column>
+					</p:dataTable>
+                </div>
+            </div>
+    </ui:define>
+</ui:composition>

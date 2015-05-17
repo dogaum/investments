@@ -213,8 +213,10 @@ public class CarteiraView extends BasicView implements Serializable {
 					.getTotalPortfolio()) - 1);
 
 			// Last Negotitation
-			NegotiationTO lastNegotiation = selectedCarteira.getNegotiations().get(selectedCarteira.getNegotiations().size() - 1);
-			selectedCarteira.setLastNegotiation(lastNegotiation);
+			if (!selectedCarteira.getNegotiations().isEmpty()) {
+				NegotiationTO lastNegotiation = selectedCarteira.getNegotiations().get(selectedCarteira.getNegotiations().size() - 1);
+				selectedCarteira.setLastNegotiation(lastNegotiation);				
+			}
 
 			// Last Income
 			IncomeTO lastIncome = incomeRepository.findTopByOrderByIncomeDateDescAddDateDesc();
@@ -226,27 +228,31 @@ public class CarteiraView extends BasicView implements Serializable {
 	}
 
 	private void createPieCharts() {
-		pieModelPre = new PieChartModel();
-		pieModelPos = new PieChartModel();
-		for (CarteiraItemTO item : carteiraItens) {
-			if (item.getQuantity() > 0) {
-				pieModelPre.set(item.getStock(), item.getTotalValue());
-				pieModelPos.set(item.getStock(), item.getTotalActual());
+		pieModelPre = null;
+		pieModelPos = null;
+		if (carteiraItens != null && !carteiraItens.isEmpty()) {
+			pieModelPre = new PieChartModel();
+			pieModelPos = new PieChartModel();
+			for (CarteiraItemTO item : carteiraItens) {
+				if (item.getQuantity() > 0) {
+					pieModelPre.set(item.getStock(), item.getTotalValue());
+					pieModelPos.set(item.getStock(), item.getTotalActual());
+				}
 			}
-		}
-        pieModelPre.setTitle("Alocacao de Compra");
-        pieModelPre.setLegendPosition("w");
-        pieModelPre.setFill(true);
-        pieModelPre.setShowDataLabels(true);
-        pieModelPre.setDiameter(450);
-        pieModelPre.setLegendCols(2);
+	        pieModelPre.setTitle("Alocacao de Compra");
+	        pieModelPre.setLegendPosition("w");
+	        pieModelPre.setFill(true);
+	        pieModelPre.setShowDataLabels(true);
+	        pieModelPre.setDiameter(450);
+	        pieModelPre.setLegendCols(2);
 
-        pieModelPos.setTitle("Alocacao preco atual");
-        pieModelPos.setLegendPosition("e");
-        pieModelPos.setFill(true);
-        pieModelPos.setShowDataLabels(true);
-        pieModelPos.setDiameter(450);
-        pieModelPos.setLegendCols(2);
+	        pieModelPos.setTitle("Alocacao preco atual");
+	        pieModelPos.setLegendPosition("e");
+	        pieModelPos.setFill(true);
+	        pieModelPos.setShowDataLabels(true);
+	        pieModelPos.setDiameter(450);
+	        pieModelPos.setLegendCols(2);			
+		}
 	}
 	
 	/**
