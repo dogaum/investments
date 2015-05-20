@@ -49,6 +49,10 @@ public class IncomeTotal implements Serializable, Comparable<IncomeTotal>  {
 
 	public Double value12;
 
+	public Double lastQuote;
+
+	public Double lastPercent;
+
 	/**
 	 * Add a new IncomeCompany to allocate
 	 * @param income
@@ -193,6 +197,22 @@ public class IncomeTotal implements Serializable, Comparable<IncomeTotal>  {
 
 	public void setIncomes(List<IncomeCompanyTO> incomes) {
 		this.incomes = incomes;
+	}
+
+	public Double getLastQuote() {
+		return lastQuote;
+	}
+
+	public void setLastQuote(Double lastQuote) {
+		this.lastQuote = lastQuote;
+	}
+
+	public Double getLastPercent() {
+		return lastPercent;
+	}
+
+	public void setLastPercent(Double lastPercent) {
+		this.lastPercent = lastPercent;
 	}
 
 	@Override

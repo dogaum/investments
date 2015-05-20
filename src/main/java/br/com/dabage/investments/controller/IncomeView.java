@@ -14,11 +14,13 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.faces.bean.RequestScoped;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import br.com.dabage.investments.company.IncomeCompanyTO;
 import br.com.dabage.investments.company.IncomeLabel;
 import br.com.dabage.investments.company.IncomeTotal;
+import br.com.dabage.investments.quote.GetQuotation;
 import br.com.dabage.investments.repositories.CompanyRepository;
 import br.com.dabage.investments.repositories.IncomeCompanyRepository;
 import br.com.dabage.investments.utils.DateUtils;
@@ -42,7 +44,10 @@ public class IncomeView extends BasicView implements Serializable {
 
     @Resource
     CompanyRepository companyRepository;
-    
+
+	@Autowired
+	GetQuotation getQuotation;
+
 	/**
 	 * Initialize this View
 	 * @return
@@ -115,6 +120,24 @@ public class IncomeView extends BasicView implements Serializable {
 			} else {
 				inc.setAvg24(avg24 / count);
 			}
+
+			inc.setLastQuote(getQuotation.getLastQuoteCache(inc.getStock()));
+			Double value = 0D;
+			if (inc.getValue1() != null) {
+				value = inc.getValue1();
+			} else if (inc.getValue2() != null) {
+				value = inc.getValue2();
+			} else if (inc.getValue3() != null) {
+				value = inc.getValue3();
+			} else if (inc.getValue4() != null) {
+				value = inc.getValue4();
+			}
+
+			if (value != 0D) {
+				Double lastPercent = (value / inc.getLastQuote());
+				inc.setLastPercent(lastPercent);				
+			}
+
 		}
 
 		Collections.sort(incomes);

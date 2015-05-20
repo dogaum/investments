@@ -143,7 +143,7 @@
 				                </p:toolbar>
 
 								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}" emptyMessage="#{msg['pf.datatable.noresults']}"
-										 	reflow="true">
+										 	reflow="true" selectionMode="single" rowKey="#{item.stock}">
 
 									<p:column style="width:38px">
 							            <p:rowToggler />
