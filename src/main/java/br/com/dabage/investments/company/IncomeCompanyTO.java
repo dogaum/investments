@@ -1,9 +1,12 @@
 package br.com.dabage.investments.company;
 
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
 
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -20,6 +23,9 @@ public class IncomeCompanyTO extends AbstractDocument implements Comparable<Inco
 	private Date incomeDate;
 
 	private Integer yearMonth;
+
+	@Transient
+	private Date yearMonthDate;
 	
 	@Indexed
 	private BigInteger idCompany;
@@ -62,6 +68,21 @@ public class IncomeCompanyTO extends AbstractDocument implements Comparable<Inco
 
 	public void setYearMonth(Integer yearMonth) {
 		this.yearMonth = yearMonth;
+	}
+
+	public Date getYearMonthDate() {
+		return yearMonthDate;
+	}
+
+	public void setYearMonthDate(Date yearMonthDate) {
+		this.yearMonthDate = yearMonthDate;
+		if (yearMonthDate != null) {
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(yearMonthDate);
+			int month = cal.get(Calendar.MONTH) + 1;
+			String yearMonth = cal.get(Calendar.YEAR) + StringUtils.leftPad(month + "", 2, "0") ;
+			this.yearMonth = Integer.parseInt(yearMonth);			
+		}
 	}
 
 	@Override

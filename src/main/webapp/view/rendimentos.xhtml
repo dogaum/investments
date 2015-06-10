@@ -50,6 +50,15 @@
                     </ol>
                 </div>
                 <div class="col-lg-12">
+	                <p:toolbar>
+	                	<f:facet name="right">
+						    <p:commandLink id="reNewIncome" onclick="PF('addIncomeReDlg').show()" actionListener="#{incomeView.prepareIncome}"
+						    				update=":form:panelNewIncome">
+						        <i class="fa fa-fw fa-usd"></i>
+						        <h:outputText value="#{msg['app.incomes.income.add']}" />
+						    </p:commandLink>				                		
+	                	</f:facet>
+	                </p:toolbar>
 					<p:dataTable id="itemTable" var="income" value="#{incomeView.incomes}" emptyMessage="#{msg['pf.datatable.noresults']}"
 								 selectionMode="single" rowKey="#{income.stock}">
 					    <p:column headerText="#{msg['app.incomes.stock']}" sortBy="#{income.stock}" style="text-align:center" width="80">
@@ -138,6 +147,35 @@
 					        </h:outputText>
 					    </p:column>
 					</p:dataTable>
+			        <p:dialog widgetVar="addIncomeReDlg" modal="true" position="center" header="#{msg['app.incomes.income.header']}" width="530" showEffect="fade" hideEffect="fade" closeOnEscape="true">
+						<p:panel id="panelNewIncome">
+			                <h:panelGrid columns="2" cellspacing="5" rendered="#{not empty incomeView.incomeCompany}">		
+						        <p:outputLabel value="#{msg['app.portfolio.symbol']}:" for="incomeSymbol" />
+						        <p:autoComplete id="incomeSymbol" minQueryLength="3" value="#{incomeView.incomeCompany.stock}" 
+						        			 completeMethod="#{chartView.completeStock}" effect="fade" />
+
+		 						<p:outputLabel for="reIncomeDate" value="#{msg['app.incomes.incomeDate']}:" />
+		        				<p:calendar id="reIncomeDate" value="#{incomeView.incomeCompany.incomeDate}" pattern="dd/MM/yyyy" mask="true" />
+
+		 						<p:outputLabel for="reYearMonth" value="#{msg['app.incomes.yearMonth']}:" />
+		        				<p:calendar id="reYearMonth" value="#{incomeView.incomeCompany.yearMonthDate}" pattern="MM/yyyy" mask="true" />
+
+								<p:outputLabel value="#{msg['app.portfolio.income.value']}:" for="incomeValue" />
+								<pe:inputNumber id="incomeValue" value="#{incomeView.incomeCompany.value}"  symbol="#{msg['currencySymbol']} " decimalPlaces="12"/>
+		
+			                </h:panelGrid>
+
+			                <p:separator />
+			                <p:toolbar>
+			                	<f:facet name="left">
+			                		<p:commandButton value="#{msg['btn.cancel']}" onclick="PF('addIncomeReDlg').hide()" type="button"/>
+			                	</f:facet>
+			                	<f:facet name="right">
+			                		<p:commandButton value="#{msg['btn.add']}" actionListener="#{incomeView.addIncome}" update=":form"/>
+			                	</f:facet>
+			                </p:toolbar>
+						</p:panel>
+			        </p:dialog>
                 </div>
             </div>
     </ui:define>

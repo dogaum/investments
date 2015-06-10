@@ -13,10 +13,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.faces.bean.RequestScoped;
+import javax.faces.event.ActionEvent;
 
+import org.primefaces.context.RequestContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
+import br.com.dabage.investments.carteira.IncomeTO;
+import br.com.dabage.investments.company.CompanyTO;
 import br.com.dabage.investments.company.IncomeCompanyTO;
 import br.com.dabage.investments.company.IncomeLabel;
 import br.com.dabage.investments.company.IncomeTotal;
@@ -38,7 +42,9 @@ public class IncomeView extends BasicView implements Serializable {
 	private List<IncomeTotal> incomes;
 
 	private IncomeLabel incomeLabel;
-	
+
+	private IncomeCompanyTO incomeCompany;
+
     @Resource
     IncomeCompanyRepository incomeCompanyRepository;
 
@@ -164,6 +170,56 @@ public class IncomeView extends BasicView implements Serializable {
 		}
 	}
 
+	/**
+	 * Prepare a Income to be add
+	 * @param event
+	 */
+	public void prepareIncome(ActionEvent event) {
+		incomeCompany = new IncomeCompanyTO();
+	}
+
+	/**
+	 * Add a new IncomeCompanyTO
+	 * @param event
+	 */
+	public void addIncome(ActionEvent event) {
+		if (incomeCompany.getStock().isEmpty()) {
+			addWarnMessage("Infome o codigo da Acao/Fundo.");
+			return;
+		}
+
+		if (incomeCompany.getIncomeDate() == null) {
+			addWarnMessage("Infome a data de divulgacao.");
+			return;
+		}
+
+		if (incomeCompany.getYearMonthDate() == null) {
+			addWarnMessage("Infome o mes de referencia.");
+			return;
+		}
+
+		if (incomeCompany.getValue() == null) {
+			addWarnMessage("Infome o valor do provento.");
+			return;
+		}
+
+		CompanyTO company = companyRepository.findByTicker(incomeCompany.getStock());
+		if (company == null) {
+			addWarnMessage("Empresa nao encontrada.");
+			return;
+		}
+		incomeCompany.setIdCompany(company.getId());
+
+		if (incomeCompanyRepository.findByStockAndYearMonth(incomeCompany.getStock(), incomeCompany.getYearMonth()) == null) {
+			incomeCompanyRepository.save(incomeCompany);	
+		}
+
+		incomeCompany = new IncomeCompanyTO();
+		calcResults();
+		RequestContext rc = RequestContext.getCurrentInstance();
+	    rc.execute("PF('addIncomeReDlg').hide()");
+	}
+
 	public List<IncomeTotal> getIncomes() {
 		return incomes;
 	}
@@ -178,6 +234,14 @@ public class IncomeView extends BasicView implements Serializable {
 
 	public void setIncomeLabel(IncomeLabel incomeLabel) {
 		this.incomeLabel = incomeLabel;
+	}
+
+	public IncomeCompanyTO getIncomeCompany() {
+		return incomeCompany;
+	}
+
+	public void setIncomeCompany(IncomeCompanyTO incomeCompany) {
+		this.incomeCompany = incomeCompany;
 	}
 
 }
