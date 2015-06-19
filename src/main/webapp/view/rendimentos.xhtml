@@ -61,7 +61,7 @@
 	                </p:toolbar>
 					<p:dataTable id="itemTable" var="income" value="#{incomeView.incomes}" emptyMessage="#{msg['pf.datatable.noresults']}"
 								 selectionMode="single" rowKey="#{income.stock}">
-					    <p:column headerText="#{msg['app.incomes.stock']}" sortBy="#{income.stock}" style="text-align:center" width="80">
+					    <p:column headerText="#{msg['app.incomes.stock']}" sortBy="#{income.stock}" style="text-align:left" width="80">
 					        <h:outputText value="#{income.stock}" style="font-weight: bold;"/>
 					    </p:column>
 

@@ -26,7 +26,6 @@
             <!-- /.row -->
             <div class="row">
                 <div class="col-lg-12">
-					<h:form>
 					    <h:panelGrid columns="3" cellpadding="10" style="margin-left:25px">
 					        <p:outputLabel value="#{msg['app.graph.stock']}:" for="acMinLength" />
 					        <p:autoComplete id="acMinLength" minQueryLength="3" value="#{chartView.stock}" completeMethod="#{chartView.completeStock}" effect="fade" />
@@ -34,9 +33,10 @@
 					    	<p:commandButton value="#{msg['btn.send']}" id="btnSend" ajax="false" actionListener="#{chartView.createGrafico}" styleClass="ui-priority-primary" />
 					    </h:panelGrid>
 						<h:panelGrid id="graph" style="margin-left:20px">
-							<p:chart type="ohlc" model="#{chartView.grafico}" style="width:800px;height:450px"/>
+							<p:chart type="ohlc" model="#{chartView.grafico}" style="width:1024px;height:540px">
+								<p:ajax event="itemSelect" listener="#{chartView.itemSelect}"/>
+							</p:chart>
 						</h:panelGrid>
-					</h:form>
                 </div>
             </div>
     </ui:define>

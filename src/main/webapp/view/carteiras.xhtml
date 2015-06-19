@@ -143,14 +143,14 @@
 				                </p:toolbar>
 
 								<p:dataTable id="itemTable" var="item" value="#{carteiraView.carteiraItens}" emptyMessage="#{msg['pf.datatable.noresults']}"
-										 	reflow="true" selectionMode="single" rowKey="#{item.stock}">
+										 	reflow="true" selectionMode="single" rowKey="#{item.stock}" selection="#{carteiraView.selectedCarteiraItem}">
 
 									<p:column style="width:38px">
 							            <p:rowToggler />
 							        </p:column>
 
 							        <p:column style="width:50px;text-align: center">
-							             <p:commandButton update=":form:incomeDetail" immediate="true" oncomplete="PF('incomeDialog').show()" icon="ui-icon-search" title="#{msg['app.portfolio.incomes.header']}">
+							             <p:commandButton update=":form:incomeDetail" oncomplete="PF('incomeDialog').show()" icon="ui-icon-search" title="#{msg['app.portfolio.incomes.header']}">
 							                <f:setPropertyActionListener value="#{item}" target="#{carteiraView.selectedCarteiraItem}"/>
 							            </p:commandButton>
 							        </p:column>
@@ -475,10 +475,11 @@
 
 					<!-- Income Detail -->
 				    <p:dialog widgetVar="incomeDialog" modal="true" position="center" header="#{msg['app.portfolio.incomes.header']}" width="60%" showEffect="fade" hideEffect="fade" resizable="true" draggable="true" closeOnEscape="true">
-				        <p:panel id="incomeDetail" style="text-align:center;" rendered="#{not empty carteiraView.selectedCarteiraItem}">
+				        <p:panel id="incomeDetail" style="text-align:center;">
 							<p:dataTable widgetVar="incItemTable" var="incItem" value="#{carteiraView.selectedCarteiraItem.incomes}" style="margin-left:27px" rowKey="#{incItem.id}"
 										 editable="true" paginator="true" rows="10" rowsPerPageTemplate="10,20" reflow="true" sortBy="#{incItem.stock}"
-                         				 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+                         				 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         				 rendered="#{not empty carteiraView.selectedCarteiraItem}">
 
 								<p:ajax event="rowEdit" listener="#{carteiraView.editIncome}" update=":form:portfolioDetail" />
 

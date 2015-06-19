@@ -8,8 +8,12 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
 
+import org.primefaces.component.chart.Chart;
+import org.primefaces.event.ItemSelectEvent;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.DateAxis;
 import org.primefaces.model.chart.OhlcChartModel;
@@ -95,4 +99,13 @@ public class ChartView extends BasicView implements Serializable {
         return results;
     }
 
+    public void itemSelect(ItemSelectEvent event) {
+    	Chart chart = (Chart) event.getSource();
+        OhlcChartModel ohlc = (OhlcChartModel) chart.getModel();
+        OhlcChartSeries series = ohlc.getData().get(event.getItemIndex());
+        String retorno = "Abertura: " + series.getOpen() + "\nMinima: " + series.getLow();
+
+        FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, retorno, retorno);        
+        FacesContext.getCurrentInstance().addMessage(null, msg);
+    }
 }

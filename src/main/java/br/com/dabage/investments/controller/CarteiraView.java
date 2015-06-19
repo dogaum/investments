@@ -98,6 +98,7 @@ public class CarteiraView extends BasicView implements Serializable {
 		UserTO user = getUserLoggedIn();
 		carteiras = carteiraRepository.findByUser(user);
 		emptyPosition = false;
+		selectedCarteiraItem = null;
 		if (carteiras != null && !carteiras.isEmpty()) {
 			firstCarteiraRing = 0;
 			selectedCarteira = carteiras.get(firstCarteiraRing);
@@ -128,17 +129,26 @@ public class CarteiraView extends BasicView implements Serializable {
 			if (emptyPosition) {
 				selectCarteira();
 			} else {
-				Iterator<CarteiraItemTO> iteItens = carteiraItens.iterator();
-				while (iteItens.hasNext()) {
-					CarteiraItemTO item = iteItens.next();
-					if (item.getQuantity().equals(0L)) {
-						iteItens.remove();
-					}
-				}
+				hideEmptyPosition();
 			}
 		}
 	}
 
+	/**
+	 * Hid empty positions
+	 */
+	public void hideEmptyPosition() {
+		if (carteiraItens != null && !emptyPosition) {
+			Iterator<CarteiraItemTO> iteItens = carteiraItens.iterator();
+			while (iteItens.hasNext()) {
+				CarteiraItemTO item = iteItens.next();
+				if (item.getQuantity().equals(0L)) {
+					iteItens.remove();
+				}
+			}
+		}
+	}
+	
 	/**
 	 * Apresentar detalhes de uma carteira
 	 */
@@ -224,6 +234,7 @@ public class CarteiraView extends BasicView implements Serializable {
 
 			Collections.sort(carteiraItens);
 			createPieCharts();
+			hideEmptyPosition();
 		}
 	}
 
@@ -525,7 +536,7 @@ public class CarteiraView extends BasicView implements Serializable {
 	}
 
 	public void setSelectedCarteiraItem(CarteiraItemTO selectedCarteiraItem) {
-		if (selectedCarteiraItem.getIncomes() != null) {
+		if (selectedCarteiraItem != null && selectedCarteiraItem.getIncomes() != null) {
 			selectedCarteiraItemTotalValue = 0D;
 			for (IncomeTO income : selectedCarteiraItem.getIncomes()) {
 				selectedCarteiraItemTotalValue += income.getValue();
